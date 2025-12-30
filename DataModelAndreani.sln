@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbClienti", "DbClienti.csproj", "{320B3B55-E770-1575-2701-309389EA72ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{320B3B55-E770-1575-2701-309389EA72ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{320B3B55-E770-1575-2701-309389EA72ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{320B3B55-E770-1575-2701-309389EA72ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{320B3B55-E770-1575-2701-309389EA72ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5EC8DD8-7BC8-46C2-AACB-3D16A3353A1A}
+	EndGlobalSection
+EndGlobal
