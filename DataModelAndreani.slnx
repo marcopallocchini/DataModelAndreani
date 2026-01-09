@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Elementi di soluzione/">
+    <File Path="Docs/Regole_nomenclatura_database.md" />
+  </Folder>
+  <Project Path="DbClienti/DbClienti.csproj" />
+  <Project Path="DbRiscossioneCoattiva/DbRiscossioneCoattiva.csproj" />
+</Solution>
