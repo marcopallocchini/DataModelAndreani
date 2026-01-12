@@ -2,6 +2,6 @@
   <Folder Name="/Elementi di soluzione/">
     <File Path="Docs/Regole_nomenclatura_database.md" />
   </Folder>
-  <Project Path="DbClienti/DbContratti.csproj" />
+  <Project Path="DbContratti/DbContratti.csproj" />
   <Project Path="DbRiscossioneCoattiva/DbRiscossioneCoattiva.csproj" />
 </Solution>
