@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace DbClienti.Models
+namespace DbContratti.Models
 {
   public class Commessa
   {

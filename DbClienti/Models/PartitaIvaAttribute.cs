@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DbClienti.Models
+namespace DbContratti.Models
 {
     public class PartitaIvaAttribute : ValidationAttribute
     {

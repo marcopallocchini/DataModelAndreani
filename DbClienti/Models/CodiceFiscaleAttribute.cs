@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
-namespace DbClienti.Models
+namespace DbContratti.Models
 {
     public class CodiceFiscaleAttribute : ValidationAttribute
     {

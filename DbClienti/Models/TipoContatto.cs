@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DbClienti.Models
+namespace DbContratti.Models
 {
   public class TipoContatto
   {

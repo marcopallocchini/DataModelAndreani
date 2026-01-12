@@ -31,7 +31,7 @@ erDiagram
         datetime DataModifica DateTime
     }
 
-    Indirizzi { %%TODO: vedi quella su DbClienti + valutare se mettere solo indirizzo di residenza/sede legale o gestire anche gli altri indirizzi
+    Indirizzi { %%TODO: vedi quella su DbContratti + valutare se mettere solo indirizzo di residenza/sede legale o gestire anche gli altri indirizzi
         int Id PK "Identificativo univoco"
         int IdSoggetto FK int
     }

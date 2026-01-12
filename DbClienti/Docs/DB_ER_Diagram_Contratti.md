@@ -1,108 +1,118 @@
-# Database ER Diagram - MS Clienti
+# Database ER Diagram - MS-Contratti
 
-Questo documento rappresenta la struttura del database del microservizio MS Clienti attraverso un diagramma Entity-Relationship (ER).
+Questo documento rappresenta la struttura del database del microservizio MS Contratti attraverso un diagramma Entity-Relationship (ER).
 
 ## Struttura Database
 
-Il database è composto da tre entità principali:
-- **CLIENTI**: Tabella principale contenente i dati dei clienti
-- **ENTI**: Tabella contenente gli enti associati ai clienti
-- **COMMESSE**: Tabella contenente le commesse associate agli enti
+Il database è composto da queste entità principali:
+- **Contraenti**: Tabella principale contenente i dati dei contraenti (clienti ed enti)
+- **Contratti**: Tabella contenente i contratti
+- **ContrattiContraenti** : Tabella di associazione tra contraenti e contratti
+- **Commesse**: Tabella contenente le commesse associate agli enti beneficiari
 
 ## Diagramma ER
 
 ```mermaid
 erDiagram
-    CLIENTI ||--o{ ENTI : "ha"
-    ENTI ||--o{ COMMESSE : "ha"
+    Contraenti ||--o{ Contratti : "ha"
+    Contratti ||--o{ Contraenti : "ha"
     
-    Clienti {
-        int id PK "Identificativo univoco"
-        string codice_cliente UK "Codice cliente"
-        string ragione_sociale "Ragione sociale"
-        string partita_iva "Partita IVA"
-        string codice_fiscale "Codice fiscale"
-        string email "Email"
-        string telefono "Telefono"
-        string indirizzo "Indirizzo"
-        string cap "CAP"
-        string citta "Città" varchar(50)
-        string provincia "Provincia" varchar(2)
-        string Utente_modifica "Utente modifica" varchar(15)
-        datetime data_modifica "Data modifica"
+    Contraenti {
+        int Id PK "Identificativo univoco"
+        string Codice UK "Codice cliente interno Andreani"
+        string CodiceFiscale "Codice fiscale"
+        string PartitaIva "Partita IVA"
+        string RagioneSociale "Ragione sociale"
+        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        datetime DataModifica "Data modifica"
     }
 
-    Enti {
-        int id PK "Identificativo univoco"
-        string codice_ente UK "Codice ente"
-        string denominazione "Denominazione"
-        string tipologia "Tipologia ente"
-        string indirizzo "Indirizzo"
-        string citta "Città"
-        string provincia "Provincia"
-        string cap "CAP"
-        datetime data_creazione "Data creazione"
-        datetime data_modifica "Data ultima modifica"
+    Contratti {
+        int Id PK "Identificativo univoco"
+        int IdCategoria FK "Riferimento alla categoria del contratto"
+        string Descrizione "Descrizione contratto" varchar(255)
+        date DataInizio "Data inizio"
+        date DataFine "Data fine"
+        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        datetime DataModifica "Data modifica"
     }
-    
+
+    TipiCategoriaContratto {
+        int Id PK "Identificativo univoco"
+        string Tipo "Descrizione categoria contratto" 1 = Diretto con l'ente beneficiario; 2 = Tramite concessionario; 3 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandante; 4 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario; 5 = In subappalto; 6 = Accordo quadro
+    }
+
+    ContrattiContraenti {
+        int Id PK "Identificativo univoco"
+        int IdContratto FK "Riferimento al contratto"
+        int IdContraente FK "Riferimento al contraente"
+        bool HasFatturazione "Indica se il contraente è destinatario di fatturazione"
+        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        datetime DataModifica "Data modifica"
+    }
+
     Commesse {
-        int id PK "Identificativo univoco"
-        string codice_commessa UK "Codice commessa (CIG)"
-        string descrizione "Descrizione"
-        string stato "Stato commessa"
-        date data_inizio "Data inizio"
-        date data_fine "Data fine prevista"
-        datetime data_creazione "Data creazione"
-        datetime data_modifica "Data ultima modifica"
+        int Id PK "Identificativo univoco"
+        string Codice UK "Codice commessa (codice interno Andreani comprensivo del CIG)"
+        string Descrizione "Descrizione" varchar(255)
+        int IdContratto FK "Riferimento al contratto"
+        int IdContraente FK "Riferimento all'ente beneficiario"
+        int IdTipoNaturaContratto FK "Riferimento al tipo di contratto"
+        int IdTipoServizio FK "Riferimento al tipo di servizio"
+        int IdTipoEntrata FK "Riferimento all'entrata"
+        int IdTipoStatoCommessa "Stato commessa"
+        date DataInizio "Data inizio"
+        date DataFine "Data fine"
+        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        datetime DataModifica "Data modifica"
     }
 	
-	AssociaClienteEnteCommessa {
-        int IdCliente  FK PK "Riferimento al cliente"
-        int IdEnte     FK PK "Riferimento all'ente"
-        int IdCommessa FK PK "Riferimento alla commessa"
+	CondizioniEconomiche {
+        int Id PK "Identificativo univoco"
+        int IdCommessa FK UK "Riferimento alla commessa"
+        int IdTipoAttivita FK UK "Riferimento al tipo attività"
+        int IdParametroEconomico FK PK "Riferimento al parametro economico"
+        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        datetime DataModifica "Data modifica"
 	}
 	
-	AssociaCommessaEntrata {
-        int IdCommessa     FK PK "Riferimento alla commessa"
-        int IdTipoEntrata  FK PK "Riferimento all'entrata"
-        int idTipoAttivita FK PK "Riferimento al tipo attività"
-	}
+    ParametriEconomici {
+        int Id PK "Identificativo univoco"
+        int IdCondizioniEconomiche FK "Riferimento alle condizioni economiche"
+        short AnnoImposta "Anno di imposta" smallint
+        int IdTipoParametro FK "Riferimento al tipo parametro"
+        decimal Valore "Valore parametro" decimal(13,8)
+        int IdTipoValore FK "Riferimento al tipo valore"
+        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        datetime DataModifica "Data modifica"
+    }
 
-    %% TODO: parametri a livello servizio/prodotto divisi per anno di imposta - in orizzontale oppure categorizziamo i parametri e li mettiamo in verticale?
-    %%       chiedere a Raffaele quali sono i parametri che servono!!!
-	
-	TipiStatoCommessa {
-		int Id PK int
-		string Descrizione varchar(15) //1 = aperta; 2 = chiusa; 3 = sospesa fino a rinnovo
-	}
-	
-	Indirizzi {
-		int Id PK int
-		string Presso varchar(150)
-		string Toponimo varchar(15)
-		string DenominazioneStradale varchar(100)
-		string Civico varchar(5)
-		string Km varchar(10)
-		string Esponente varchar(10)
-		string Edificio varchar(10)
-		string Scala varchar(5)
-		string Piano varchar(5)
-		string Interno varchar(5)
-	}
-	
-	Contatti {
-		int Id PK int
-		int IdTipo FK TipiContatto int
-		int IdCliente FK Clienti int
-		int IdEnte FK Enti int
-		string Contatto varchar(254)
-		string Nota nvarchar(50)
-	}
-	
-	TipiContatto {
-		int Id PK int
-		string Descrizione varchar(15) //1 = Telefono fisso; 2 = Telefono mobile; 3 = PEC; 4 = E-Mail; 5 = Fax; 6 = Sito web
-	}
+    TipiParametro {
+        int Id PK "Identificativo univoco"
+        string Tipo varchar(50) "Descrizione parametro" %% TODO: inserire tutte le voci possibili (Esempi: Aggio, Percentuale di ritenuta d'acconto, Percentuale IVA, Costo fisso per pratica, Costo variabile per pratica, Costo fisso per avviso, Costo variabile per avviso)
+    }
+
+    TipiValore {
+        int Id PK "Identificativo univoco"
+        string Tipo varchar(15) %% 1 = Percentuale; 2 = Importo Euro; 3 = Coefficiente; 4 = Giorni; 5 = Mesi; 6 = Numero
+    }
+
+    TipiAttivita {
+        int Id PK "Identificativo univoco"
+        string Codice varchar(5) "Codice attività"
+        string Tipo varchar(100) "Descrizione attività"
+        String CodiceCoge varchar(5) "Codice COGE"
+    }
+
+    TipiNaturaContratto {
+        int Id PK "Identificativo univoco"
+        string Tipo "Descrizione natura contratto" %% 1 = Appalto; 2 = Concessione
+    }
+
+    TipiServizio {
+        int Id PK "Identificativo univoco"
+        string Tipo varchar(50) "Descrizione servizio" %% 1 = Ordinario; 2 = Accertamento; 3 = Liquidazione; 4 = Coattivo
+    }
 
     TipiEntrata {
         int Id PK "Identificativo univoco"
@@ -116,17 +126,67 @@ erDiagram
     }
 
     TipiNaturaEntrata {
-        int id PK "Identificativo univoco"
-        string Tipo varchar(25) %% 1 = Tributaria, 2 = Patrimoniale, 3 = Extra tributaria %% TODO: sentire Novella
+        int Id PK "Identificativo univoco"
+        string Tipo varchar(25) %% 1 = Tributaria, 2 = Patrimoniale, 3 = Extra tributaria
     }
 
     TipiMacroEntrata {
         int id PK "Identificativo univoco"
         string Tipo varchar(25) %% 1 = Immobili, 2 = Rifiuti solidi urbani, 3 = Tributi minori, 4 = Infrazioni al codice della strada, 5 = Idrico, 6 = Servizi scolastici, 7 = Servizi cimiteriali, 8 = Imposta di soggiorno, 99 = Altre entrate
     }
-    
+
+	TipiStatoCommessa {
+		int Id PK int
+		string Tipo varchar(15) %% 1 = Aperta; 2 = Chiusa; 3 = Sospesa fino a rinnovo
+	}
+
+	Indirizzi {
+		int Id PK int
+        int IdContraente FK Contraenti int
+		string Presso varchar(150)
+		string Toponimo varchar(15)
+		string DenominazioneStradale varchar(100)
+		string Civico varchar(5)
+		string Km varchar(10)
+		string Esponente varchar(10)
+		string Edificio varchar(10)
+		string Scala varchar(5)
+		string Piano varchar(5)
+		string Interno varchar(5)
+		string Cap varchar(5)
+		string Citta varchar(50)
+		string Localita varchar(50)
+		string Provincia varchar(2)
+	}
+	
+	Contatti {
+		int Id PK int
+		int IdTipo FK TipiContatto int
+		int IdContraente FK Contraenti int
+		string Contatto varchar(254)
+		string Nota nvarchar(50)
+	}
+	
+	TipiContatto {
+		int Id PK int
+		string Tipo varchar(15) //1 = Telefono fisso; 2 = Telefono mobile; 3 = PEC; 4 = E-Mail; 5 = Fax; 6 = Sito web
+	}
 
 ```
+
+## Esempi di contratti
+
+| Categoria contratto                                                      | Cliente fatturazione | Cliente contratto | Ente beneficiario |
+|--------------------------------------------------------------------------|----------------------|-------------------|-------------------|
+| Diretto con l'ente beneficiario                                          | Comune X             | Comune X          | Comune X          |
+| Tramite concessionario                                                   | Sienambiente         | Sienambiente      | Comune A          |
+| Tramite concessionario                                                   | Sienambiente         | Sienambiente      | Comune B          |
+| Tramite raggruppamento temporaneo di imprese (RTI) - Mandante            | Econord              | Malnate           | Malnate           |
+| In subappalto                                                            | Econord              | Econord           | Malnate           |
+| Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario          | Savona               | ICA               | Savona            |
+| Tramite raggruppamento temporaneo di imprese (RTI) - Mandante            | ICA                  | Albisola          | Albisola          |
+| Accordo quadro                                                           | Comune C             | Unione Montana    | Comune C          |
+| Accordo quadro                                                           | Comune D             | Unione Montana    | Comune D          |
 
 ## Relazioni
 
@@ -142,7 +202,7 @@ erDiagram
 - Un **ENTE** può avere uno o più **CONTATTI** (relazione 1:N)
 - Un **CONTATTO** appartiene sempre ad un solo **ENTE**
 
-Queste informazioni non sono presenti su Zucchetti, andrebbero gestite sul ms-clienti
+Queste informazioni non sono presenti su Zucchetti, andrebbero gestite sul ms-contratti
 e rese disponibili per tutta la digital-platform
 
 - gestione di una tabella di referenti dell'ente/cliente (riferimento di un ufficio)
@@ -163,7 +223,7 @@ codice commessa zucchetti
 
 attività (tabella dei centri di costo)
 
-Informazioni bancarie (non nel dominio dei clienti)
+Informazioni bancarie (non nel dominio dei contratti)
 
 commessa
 prodotto
@@ -245,3 +305,20 @@ serve per rendicontazione, versamenti e bollettini
 | UNIVERSITA    | SERVIZI UNIVERSITARI                      | Servizi universitari                                       | 2                   | 6                  |
 | VOTIVE        | LUCI VOTIVE                               | Lampade votive                                             | 2                   | 7                  |
 
+### Valori TipiAttivita
+
+| Id  | Codice | Tipo                                              | CodiceCoge |
+|-----|--------|---------------------------------------------------|------------|
+| 1   | -      | -                                                 |            |
+| 2   | ACCER  | Accertamento e riscossione accertamento           | ACCER      |
+| 3   | RISCV  | Riscossione volontaria/Gestione ordinaria         | RISCV      |
+| 4   | RISCC  | Riscossione coattiva                              | RISCC      |
+| 5   | AVEND  | Altri servizi di vendita                          |            |
+| 6   | AGENE  | Altri servizi ad uso interno (costi generali)     |            |
+| 7   | GESTI  | Gestione                                          | GESTI      |
+| 8   | GEIVA  | Gestione IVA                                      |            |
+| 9   | RVIVA  | Riscossione Volontaria Iva                        |            |
+| 10  | RCIVA  | Riscossione Coattiva Iva                          |            |
+| 11  | RVNOI  | Riscossione Volontaria no IVA                     |            |
+| 12  | RCNOI  | Riscossione Coattiva no IVA                       |            |
+| 13  | SPESE  | Spese                                             | SPESE      |

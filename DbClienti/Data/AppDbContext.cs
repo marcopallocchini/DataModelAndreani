@@ -1,11 +1,11 @@
-﻿using DbClienti.Models;
+﻿using DbContratti.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 
-namespace DbClienti.Data
+namespace DbContratti.Data
 {
   public class AppDbContext : DbContext
   {
@@ -14,7 +14,7 @@ namespace DbClienti.Data
     public DbSet<Commessa> Commesse => Set<Commessa>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=DbClienti;Trusted_Connection=True;");
+        => options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=DbContratti;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
