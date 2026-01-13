@@ -13,9 +13,9 @@ namespace DbContratti.Models
     public int CONEN_Id { get; set; }
     
     // Identificatore univoco per il cliente
-    [Column("CONEN_Codice", TypeName = "varchar(20)")]
+    [Column("CONEN_CodiceInterno", TypeName = "varchar(20)")]
     [MaxLength(20)]
-    public string CONEN_Codice { get; set; } = null!;
+    public string CONEN_CodiceInterno { get; set; } = null!;
 
     [CodiceFiscale]
     [Column("CONEN_CodiceFiscale", TypeName = "varchar(16)")]
@@ -55,6 +55,6 @@ namespace DbContratti.Models
 
     public ICollection<Contatto> Contatti { get; set; } = new List<Contatto>();
 
-    public ICollection<Commessa> Commesse { get; set; } = new List<Commessa>();
+    public ICollection<ContrattoContraenti> ContrattiContraenti { get; set; } = new List<ContrattoContraenti>();
   }
 }

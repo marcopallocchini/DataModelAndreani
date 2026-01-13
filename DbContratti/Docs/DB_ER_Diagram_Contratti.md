@@ -19,10 +19,10 @@ erDiagram
     
     Contraenti {
         int Id PK "Identificativo univoco"
-        string Codice UK "Codice cliente interno Andreani"
-        string CodiceFiscale "Codice fiscale"
-        string PartitaIva "Partita IVA"
-        string RagioneSociale "Ragione sociale"
+        string CodiceInterno UK "Codice interno Andreani" varchar(20)
+        string CodiceFiscale "Codice fiscale" varchar(16)
+        string PartitaIva "Partita IVA" varchar(11)
+        string RagioneSociale "Ragione sociale" nvarchar(150)
         Guid UtenteModifica "Utente modifica" uniqueidentifier
         datetime DataModifica "Data modifica"
     }
@@ -39,13 +39,13 @@ erDiagram
 
     TipiCategoriaContratto {
         int Id PK "Identificativo univoco"
-        string Tipo "Descrizione categoria contratto" 1 = Diretto con l'ente beneficiario; 2 = Tramite concessionario; 3 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandante; 4 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario; 5 = In subappalto; 6 = Accordo quadro
+        string Tipo "Descrizione categoria contratto" %% 1 = Diretto con l'ente beneficiario; 2 = Tramite concessionario; 3 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandante; 4 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario; 5 = In subappalto; 6 = Accordo quadro
     }
 
     ContrattiContraenti {
         int Id PK "Identificativo univoco"
         int IdContratto FK "Riferimento al contratto"
-        int IdContraente FK "Riferimento al contraente"
+        int IdContraente FK "Riferimento al contraente (cliente)"
         bool HasFatturazione "Indica se il contraente è destinatario di fatturazione"
         Guid UtenteModifica "Utente modifica" uniqueidentifier
         datetime DataModifica "Data modifica"
@@ -154,9 +154,10 @@ erDiagram
 		string Piano varchar(5)
 		string Interno varchar(5)
 		string Cap varchar(5)
-		string Citta varchar(50)
+		string Comune varchar(50)
 		string Localita varchar(50)
 		string Provincia varchar(2)
+		string Nazione varchar(50)
 	}
 	
 	Contatti {
