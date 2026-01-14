@@ -13,7 +13,27 @@ Il database è composto da queste entità principali:
 ## Diagramma ER
 
 ```mermaid 
-erDiagram Contraenti ||--o{ ContrattiContraenti : "ha" Contratti ||--o{ ContrattiContraenti : "ha" Contratti }o--|| TipiCategoriaContratto : "categoria" Contraenti ||--o{ Indirizzi : "ha" Contraenti ||--o{ Contatti : "ha" Contatti }o--|| TipiContatto : "tipo" Commesse }o--|| Contratti : "appartiene" Commesse }o--|| Contraenti : "beneficiario" Commesse }o--|| TipiNaturaContratto : "natura" Commesse }o--|| TipiServizio : "servizio" Commesse }o--|| TipiEntrata : "entrata" Commesse }o--|| TipiStatoCommessa : "stato" Commesse ||--o{ CondizioniEconomiche : "ha" CondizioniEconomiche }o--|| TipiAttivita : "attivita" CondizioniEconomiche ||--o{ ParametriEconomici : "ha" ParametriEconomici }o--|| TipiParametro : "tipo parametro" ParametriEconomici }o--|| TipiValore : "tipo valore" TipiEntrata }o--|| TipiNaturaEntrata : "natura" TipiEntrata }o--|| TipiMacroEntrata : "macro categoria"
+erDiagram
+
+Contraenti ||--o{ ContrattiContraenti : "ha"
+Contratti ||--o{ ContrattiContraenti : "ha"
+Contratti }o--|| TipiCategoriaContratto : "categoria" Contraenti ||--o{ Indirizzi : "ha"
+Contraenti ||--o{ Contatti : "ha"
+Contatti }o--|| TipiContatto : "tipo"
+Commesse }o--|| Contratti : "appartiene"
+Commesse }o--|| Contraenti : "beneficiario"
+Commesse }o--|| TipiNaturaContratto : "natura"
+Commesse }o--|| TipiServizio : "servizio"
+Commesse }o--|| TipiEntrata : "entrata"
+Commesse }o--|| TipiStatoCommessa : "stato"
+Commesse ||--o{ CondizioniEconomiche : "ha"
+CondizioniEconomiche }o--|| TipiAttivita : "attivita"
+CondizioniEconomiche ||--o{ ParametriEconomici : "ha"
+ParametriEconomici }o--|| TipiParametro : "tipo parametro"
+ParametriEconomici }o--|| TipiValore : "tipo valore"
+TipiEntrata }o--|| TipiNaturaEntrata : "natura"
+TipiEntrata }o--|| TipiMacroEntrata : "macro categoria"
+
 Contraenti {
     int Id PK "Identificativo univoco"
     string CodiceInterno UK "Codice interno Andreani" 

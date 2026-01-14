@@ -19,6 +19,7 @@ erDiagram
     CarichiDettaglio ||--o{ CarichiDettaglioVoci : "ha"
     
     Soggetti {
+
         int Id PK "Identificativo univoco"
         string CodiceFiscale varchar(16)
         string PartitaIva varchar(11)
@@ -57,7 +58,6 @@ erDiagram
         int IdCarico FK int
         int IdCommessa FK int
         int IdTipoProvenienza FK int %% può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
-        int IdSoggetto FK int
         int IdTipoEntrata FK int
         int IdTipoDocumento FK int
         string NumeroDocumento varchar(50) %% Numero del documento che effettivamente deve essere riscosso
@@ -75,15 +75,55 @@ erDiagram
         string TargaVeicolo varchar(10)
         string InfoVeicolo varchar(60) %% marca, modello
         string InfoSanzione varchar(50) %% articolo della violazione cds o altra sanzione
-        
-        
-        TotInteressiAtti, TotSanzioniAtti, TotInteressiRateizzo sono campi calcolati che attualmente stanno in CarichiDettaglio, ma andrebbero spostati in CarichiDettaglioVoci: andranno quindi opportuamente codificati prendendoli da rs_AttiDettaglio
-        Annotazioni StatoAnnotazioni e campi DescCaricoX andranno mappati nelle note collegate al carico dettaglio
+        string SollecitoOriginale varchar(50) %% indica il numero del sollecito originale da cui è stato generato questo carico dettaglio (se presente)
+        string Sentenza varchar(200) %% indica i riferimenti della sentenza (se presente)
+        int IdNormativa FK int "normativa di riferimento"
         string KeyRuolo varchar(100)
-
-
         Guid UtenteModifica uniqueidentifier "Utente modifica"
         datetime DataModifica "Data modifica"
+    }
+
+    Normative {
+        int Id PK "Identificativo univoco"
+        string Tipo varchar(100)
+        date DataInizio Date
+        date DataFine Date %% se null significa che è quella attualmente in vigore
+    }
+
+    CarichiDettaglioVoci {
+        int Id PK int
+        int IdCaricoDettaglio FK int
+        int IdCodiceEntrata FK int
+        int IdTipoImportoVoce FK int
+        int IdMacroVoceEntrata FK int
+        smallint AnnoRiferimento smallint %% anno di riferimento della voce (es. anno di imposta)        
+        decimal Importo Decimal(13,2)
+    }
+
+    CodiciEntrata {
+        int Id PK "Identificativo univoco"
+        string CodiceEntrata UK varchar(10) %% codice dell'entrata interno: se il codice Agenzia delle Entrate non è disponibile, ne usiamo uno nostro
+        string CodiceAE UK varchar(10) %% codice dell'entrata secondo l'Agenzia delle Entrate
+        string DenominazioneEntrata varchar(120)
+        string DenominazioneEstesa varchar(160)
+    }
+
+    TipiImportoVoce {
+        int id PK "Identificativo univoco"
+        string Tipo varchar(25) %% 1 = Netto (N), 2 = Accessorio (A)
+    }
+
+    MacroVociEntrata {
+        int Id PK "Identificativo univoco"
+        string Descrizione varchar(30) %% select Corrispondenza, count(*) from rs_CodiciTributo group by Corrispondenza order by Corrispondenza
+    }
+
+    SoggettiCarichiDettaglio {
+        int IdSoggetto FK int
+        int IdCaricoDettaglio FK int
+        int IdCaricoDettaglioPadre FK int %% per gestire gli eredi
+        int IdRelazione FK int %% es. 1 = Debitore principale, 2 = Coobbligato, 3 = Esecutato, 4 = Terzo, ecc. TODO: prendi le relazioni dal tracciato 600
+        decimal QuotaPossesso decimal(5,2) %% percentuale di possesso del carico da parte del soggetto erede (per default 100)
     }
     
     Note {
@@ -109,18 +149,15 @@ erDiagram
         int id PK "Identificativo univoco"
         string Tipo varchar(25) %% 1 = Attivo (ATT), 2 = Chiuso (CHS), 3 = Deceduto (DEC), 4 = Cancellato (eliminazione logica) (DEL), 5 = Sospeso (SOS), 99 = TODO
     }
-
-    CarichiDettaglioVoci {
-        
-    }
 	
 ```
 
 ## Relazioni
-- Un **CLIENTE** può avere uno o più **ENTI** e un **ENTE** può appartenere a più **CLIENTI**(relazione N:N)
-- Un **ENTE** può avere una o più **COMMESSE** (relazione 1:N)
-- Una **COMMESSA** appartiene sempre ad un solo **ENTE**
 
-# approccio alla migrazione
+TODO
 
-1. TODO
+# Approccio alla migrazione
+
+TotInteressiAtti, TotSanzioniAtti, TotInteressiRateizzo sono campi calcolati che attualmente stanno in CarichiDettaglio, ma andrebbero spostati in CarichiDettaglioVoci: andranno quindi opportunamente codificati prendendoli da rs_AttiDettaglio
+Annotazioni StatoAnnotazioni e campi DescCaricoX andranno mappati nelle note collegate al carico dettaglio
+
