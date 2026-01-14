@@ -12,160 +12,233 @@ Il database è composto da queste entità principali:
 
 ## Diagramma ER
 
-```mermaid
-erDiagram
-    Contraenti ||--o{ Contratti : "ha"
-    Contratti ||--o{ Contraenti : "ha"
-    
-    Contraenti {
-        int Id PK "Identificativo univoco"
-        string CodiceInterno varchar(20) UK "Codice interno Andreani"
-        string CodiceFiscale varchar(16) "Codice fiscale"
-        string PartitaIva varchar(11) "Partita IVA"
-        string RagioneSociale nvarchar(150) "Ragione sociale"
-        Guid UtenteModifica uniqueidentifier "Utente modifica"
-        datetime DataModifica "Data modifica"
-    }
+```mermaid 
+erDiagram Contraenti ||--o{ ContrattiContraenti : "ha" Contratti ||--o{ ContrattiContraenti : "ha" Contratti }o--|| TipiCategoriaContratto : "categoria" Contraenti ||--o{ Indirizzi : "ha" Contraenti ||--o{ Contatti : "ha" Contatti }o--|| TipiContatto : "tipo" Commesse }o--|| Contratti : "appartiene" Commesse }o--|| Contraenti : "beneficiario" Commesse }o--|| TipiNaturaContratto : "natura" Commesse }o--|| TipiServizio : "servizio" Commesse }o--|| TipiEntrata : "entrata" Commesse }o--|| TipiStatoCommessa : "stato" Commesse ||--o{ CondizioniEconomiche : "ha" CondizioniEconomiche }o--|| TipiAttivita : "attivita" CondizioniEconomiche ||--o{ ParametriEconomici : "ha" ParametriEconomici }o--|| TipiParametro : "tipo parametro" ParametriEconomici }o--|| TipiValore : "tipo valore" TipiEntrata }o--|| TipiNaturaEntrata : "natura" TipiEntrata }o--|| TipiMacroEntrata : "macro categoria"
+Contraenti {
+    int Id PK "Identificativo univoco"
+    string CodiceInterno UK "Codice interno Andreani" 
+    string CodiceFiscale "Codice fiscale" 
+    string PartitaIva "Partita IVA" 
+    string RagioneSociale "Ragione sociale" 
+    Guid UtenteModifica "Utente modifica"
+    datetime DataModifica "Data modifica"
+}
 
-    Contratti {
+Contratti {
         int Id PK "Identificativo univoco"
         int IdCategoria FK "Riferimento alla categoria del contratto"
         int IdContraente FK "Riferimento al contraente (cliente)"
-        int IdContrattoRiferito FK "Riferimento al contratto principale (per accordi quadro) e RTI mandante" --> il cliente a cui fatturiamo è quello riferito qui, altrimenti è lo stesso del contratto
-        string Descrizione varchar(255) "Descrizione contratto"
+        int IdContrattoRiferito FK "Riferimento al contratto principale (per accordi quadro) e RTI mandante"
+        string Descrizione "Descrizione contratto"
         date DataInizio "Data inizio"
         date DataFine "Data fine"
-        Guid UtenteModifica uniqueidentifier "Utente modifica"
+        Guid UtenteModifica "Utente modifica"
         datetime DataModifica "Data modifica"
-    }
+}
 
-    TipiCategoriaContratto {
-        int Id PK "Identificativo univoco"
-        string Tipo varchar(75) "Descrizione categoria contratto" %% 1 = Diretto con l'ente beneficiario; 2 = Tramite concessionario; 3 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandante; 4 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario; 5 = In subappalto; 6 = Accordo quadro
-    }
+TipiCategoriaContratto {
+    int Id PK "Identificativo univoco"
+    string Tipo "Descrizione categoria contratto" 
+}
 
-    Commesse {
-        int Id PK "Identificativo univoco"
-        string Codice UK "Codice commessa (codice interno Andreani comprensivo del CIG)"
-        string Descrizione varchar(255) "Descrizione"
-        int IdContratto FK "Riferimento al contratto"
-        int IdContraente FK "Riferimento all'ente beneficiario"
-        int IdTipoNaturaContratto FK "Riferimento al tipo di contratto"
-        int IdTipoServizio FK "Riferimento al tipo di servizio"
-        int IdTipoEntrata FK "Riferimento all'entrata"
-        int IdTipoStatoCommessa "Stato commessa"
-        date DataInizio "Data inizio"
-        date DataFine "Data fine"
-        Guid UtenteModifica uniqueidentifier "Utente modifica"
-        datetime DataModifica "Data modifica"
-    }
-	
-	CondizioniEconomiche {
-        int Id PK "Identificativo univoco"
-        int IdCommessa FK UK "Riferimento alla commessa"
-        int IdTipoAttivita FK UK "Riferimento al tipo attività"
-        Guid UtenteModifica uniqueidentifier "Utente modifica"
-        datetime DataModifica "Data modifica"
-	}
-	
-    ParametriEconomici {
-        int Id PK "Identificativo univoco"
-        int IdCondizioniEconomiche FK "Riferimento alle condizioni economiche"
-        short AnnoImposta "Anno di imposta" smallint
-        int IdTipoParametro FK "Riferimento al tipo parametro"
-        decimal Valore decimal(13,8) "Valore parametro"
-        int IdTipoValore FK "Riferimento al tipo valore"
-        Guid UtenteModifica uniqueidentifier "Utente modifica"
-        datetime DataModifica "Data modifica"
-    }
+ContrattiContraenti {
+    int Id PK "Identificativo univoco"
+    int IdContratto FK "Riferimento al contratto"
+    int IdContraente FK "Riferimento al contraente"
+    bool HasFatturazione "Destinatario fatturazione"
+    Guid UtenteModifica "Utente modifica"
+    datetime DataModifica "Data modifica"
+}
 
-    TipiParametro {
-        int Id PK "Identificativo univoco"
-        string Tipo varchar(50) "Descrizione parametro" %% TODO: inserire tutte le voci possibili (Esempi: Aggio, Percentuale di ritenuta d'acconto, Percentuale IVA, Costo fisso per pratica, Costo variabile per pratica, Costo fisso per avviso, Costo variabile per avviso)
-    }
+Commesse {
+    int Id PK "Identificativo univoco"
+    string Codice UK "Codice commessa"
+    string Descrizione "Descrizione" 
+    int IdContratto FK "Riferimento al contratto"
+    int IdContraente FK "Riferimento ente beneficiario"
+    int IdTipoNaturaContratto FK "Tipo contratto"
+    int IdTipoServizio FK "Tipo servizio"
+    int IdTipoEntrata FK "Tipo entrata"
+    int IdTipoStatoCommessa FK "Stato commessa"
+    date DataInizio "Data inizio"
+    date DataFine "Data fine"
+    Guid UtenteModifica "Utente modifica" 
+    datetime DataModifica "Data modifica"
+}
 
-    TipiValore {
-        int Id PK "Identificativo univoco"
-        string Tipo varchar(15) %% 1 = Percentuale; 2 = Importo Euro; 3 = Coefficiente; 4 = Giorni; 5 = Mesi; 6 = Numero
-    }
+CondizioniEconomiche {
+    int Id PK "Identificativo univoco"
+    int IdCommessa FK "Riferimento alla commessa"
+    int IdTipoAttivita FK "Riferimento al tipo attivita"
+    Guid UtenteModifica "Utente modifica" 
+    datetime DataModifica "Data modifica"
+}
 
-    TipiAttivita {
-        int Id PK "Identificativo univoco"
-        string Codice varchar(5) "Codice attività"
-        string Tipo varchar(100) "Descrizione attività"
-        String CodiceCoge varchar(5) "Codice COGE"
-    }
+ParametriEconomici {
+    int Id PK "Identificativo univoco"
+    int IdCondizioniEconomiche FK "Condizioni economiche"
+    short AnnoImposta "Anno di imposta" 
+    int IdTipoParametro FK "Tipo parametro"
+    decimal Valore "Valore parametro"
+    int IdTipoValore FK "Tipo valore"
+    Guid UtenteModifica "Utente modifica"
+    datetime DataModifica "Data modifica"
+}
 
-    TipiNaturaContratto {
-        int Id PK "Identificativo univoco"
-        string Tipo "Descrizione natura contratto" %% 1 = Appalto; 2 = Concessione
-    }
+TipiParametro {
+    int Id PK "Identificativo univoco"
+    string Tipo "Descrizione parametro"
+}
 
-    TipiServizio {
-        int Id PK "Identificativo univoco"
-        string Tipo varchar(50) "Descrizione servizio" %% 1 = Ordinario; 2 = Accertamento; 3 = Liquidazione; 4 = Coattivo
-    }
+TipiValore {
+    int Id PK "Identificativo univoco"
+    string Tipo "Descrizione tipo valore"
+}
 
-    TipiEntrata {
-        int Id PK "Identificativo univoco"
-        string CodiceInterno varchar(10) "Codice tipologia entrata Andreani Tributi" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
-        string CodiceAE varchar(3) "Codice tipologia entrata Agenzia Entrate"
-        string Tipo varchar(25) %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE su Risko)
-        string DescrizioneInterna varchar(150) "Descrizione estesa tipologia entrata Andreani Tributi" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
-        string DescrizioneAE varchar(150) "Descrizione estesa tipologia entrata Agenzia Entrate"
-        int IdTipoNaturaEntrata FK
-        int IdTipoMacroEntrata FK
-    }
+TipiAttivita {
+    int Id PK "Identificativo univoco"
+    string Codice "Codice attivita"
+    string Tipo "Descrizione attivita"
+    string CodiceCoge "Codice COGE"
+}
 
-    TipiNaturaEntrata {
-        int Id PK "Identificativo univoco"
-        string Tipo varchar(25) %% 1 = Tributaria, 2 = Patrimoniale, 3 = Extra tributaria
-    }
+TipiNaturaContratto {
+    int Id PK "Identificativo univoco"
+    string Tipo "Descrizione natura contratto"
+}
 
-    TipiMacroEntrata {
-        int id PK "Identificativo univoco"
-        string Tipo varchar(25) %% 1 = Immobili, 2 = Rifiuti solidi urbani, 3 = Tributi minori, 4 = Infrazioni al codice della strada, 5 = Idrico, 6 = Servizi scolastici, 7 = Servizi cimiteriali, 8 = Imposta di soggiorno, 99 = Altre entrate
-    }
+TipiServizio {
+    int Id PK "Identificativo univoco"
+    string Tipo "Descrizione servizio"
+}
 
-	TipiStatoCommessa {
-		int Id PK int
-		string Tipo varchar(15) %% 1 = Aperta; 2 = Chiusa; 3 = Sospesa fino a rinnovo
-	}
+TipiEntrata {
+    int Id PK "Identificativo univoco"
+    string CodiceAT "Codice AT" 
+    string CodiceAE "Codice AE"
+    string Tipo "Descrizione entrata"
+    string DescrizioneAT "Descrizione estesa AT"
+    string DescrizioneAE "Descrizione estesa AE"
+    int IdTipoNaturaEntrata FK "Natura entrata"
+    int IdTipoMacroEntrata FK "Macro entrata"
+}
 
-	Indirizzi {
-		int Id PK int
-        int IdContraente FK Contraenti int
-		string Presso varchar(150)
-		string Toponimo varchar(15)
-		string DenominazioneStradale varchar(100)
-		string Civico varchar(5)
-		string Km varchar(10)
-		string Esponente varchar(10)
-		string Edificio varchar(10)
-		string Scala varchar(5)
-		string Piano varchar(5)
-		string Interno varchar(5)
-		string Cap varchar(5)
-		string Comune varchar(50)
-		string Localita varchar(50)
-		string Provincia varchar(2)
-		string Nazione varchar(50)
-	}
-	
-	Contatti {
-		int Id PK int
-		int IdTipo FK TipiContatto int
-		int IdContraente FK Contraenti int
-		string Contatto varchar(254)
-		string Nota nvarchar(50)
-	}
-	
-	TipiContatto {
-		int Id PK int
-		string Tipo varchar(15) //1 = Telefono fisso; 2 = Telefono mobile; 3 = PEC; 4 = E-Mail; 5 = Fax; 6 = Sito web
-	}
+TipiNaturaEntrata {
+    int Id PK "Identificativo univoco"
+    string Tipo "Tipo natura entrata"
+}
+
+TipiMacroEntrata {
+    int Id PK "Identificativo univoco"
+    string Tipo "Tipo macro entrata"
+}
+
+TipiStatoCommessa {
+    int Id PK "Identificativo univoco"
+    string Tipo "Stato commessa"
+}
+
+Indirizzi {
+    int Id PK "Identificativo univoco"
+    int IdContraente FK "Riferimento contraente"
+    string Presso "Presso"
+    string Toponimo "Toponimo"
+    string DenominazioneStradale "Denominazione stradale"
+    string Civico "Civico"
+    string Km "Km"
+    string Esponente "Esponente"
+    string Edificio "Edificio"
+    string Scala "Scala"
+    string Piano "Piano"
+    string Interno "Interno"
+    string Cap "CAP"
+    string Comune "Comune"
+    string Localita "Localita"
+    string Provincia "Provincia"
+    string Nazione "Nazione"
+}
+
+Contatti {
+    int Id PK "Identificativo univoco"
+    int IdTipo FK "Tipo contatto"
+    int IdContraente FK "Riferimento contraente"
+    string Contatto "Contatto"
+    string Nota "Nota"
+}
+
+TipiContatto {
+    int Id PK "Identificativo univoco"
+    string Tipo "Tipo contatto"
+}
 
 ```
+
+### TipiCategoriaContratto
+1. Diretto con l'ente beneficiario
+2. Tramite concessionario
+3. Tramite raggruppamento temporaneo di imprese (RTI) - Mandante
+4. Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario
+5. In subappalto
+6. Accordo quadro
+
+### TipiNaturaContratto
+1. Appalto
+2. Concessione
+
+### TipiServizio
+1. Ordinario
+2. Accertamento
+3. Liquidazione
+4. Coattivo
+
+### TipiNaturaEntrata
+1. Tributaria
+2. Patrimoniale
+3. Extra tributaria
+
+### TipiMacroEntrata
+1. Immobili
+2. Rifiuti solidi urbani
+3. Tributi minori
+4. Infrazioni al codice della strada
+5. Idrico
+6. Servizi scolastici
+7. Servizi cimiteriali
+8. Imposta di soggiorno
+99. Altre entrate
+
+### TipiStatoCommessa
+1. Aperta
+2. Chiusa
+3. Sospesa fino a rinnovo
+
+### TipiValore
+1. Percentuale
+2. Importo Euro
+3. Coefficiente
+4. Giorni
+5. Mesi
+6. Numero
+
+### TipiContatto
+1. Telefono fisso
+2. Telefono mobile
+3. PEC
+4. E-Mail
+5. Fax
+6. Sito web
+
+### TipiParametro (Esempi)
+- Aggio
+- Percentuale di ritenuta d'acconto
+- Percentuale IVA
+- Costo fisso per pratica
+- Costo variabile per pratica
+- Costo fisso per avviso
+- Costo variabile per avviso
+
+### Contratti
+IdContrattoRiferito --> il cliente a cui fatturiamo è quello riferito qui, altrimenti è lo stesso del contratto
 
 ## Esempi di contratti
 
