@@ -15,9 +15,9 @@ Il database è composto da queste entità principali:
 ```mermaid 
 erDiagram
 
-Contraenti ||--o{ ContrattiContraenti : "ha"
-Contratti ||--o{ ContrattiContraenti : "ha"
-Contratti }o--|| TipiCategoriaContratto : "categoria" Contraenti ||--o{ Indirizzi : "ha"
+Contratti ||--o{ Contraenti : "ha"
+Contratti }o--|| TipiCategoriaContratto : "categoria"
+Contraenti ||--o{ Indirizzi : "ha"
 Contraenti ||--o{ Contatti : "ha"
 Contatti }o--|| TipiContatto : "tipo"
 Commesse }o--|| Contratti : "appartiene"
@@ -59,15 +59,6 @@ Contratti {
 TipiCategoriaContratto {
     int Id PK "Identificativo univoco"
     string Tipo "Descrizione categoria contratto" 
-}
-
-ContrattiContraenti {
-    int Id PK "Identificativo univoco"
-    int IdContratto FK "Riferimento al contratto"
-    int IdContraente FK "Riferimento al contraente"
-    bool HasFatturazione "Destinatario fatturazione"
-    Guid UtenteModifica "Utente modifica"
-    datetime DataModifica "Data modifica"
 }
 
 Commesse {
