@@ -19,42 +19,35 @@ erDiagram
     
     Contraenti {
         int Id PK "Identificativo univoco"
-        string CodiceInterno UK "Codice interno Andreani" varchar(20)
-        string CodiceFiscale "Codice fiscale" varchar(16)
-        string PartitaIva "Partita IVA" varchar(11)
-        string RagioneSociale "Ragione sociale" nvarchar(150)
-        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        string CodiceInterno varchar(20) UK "Codice interno Andreani"
+        string CodiceFiscale varchar(16) "Codice fiscale"
+        string PartitaIva varchar(11) "Partita IVA"
+        string RagioneSociale nvarchar(150) "Ragione sociale"
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
         datetime DataModifica "Data modifica"
     }
 
     Contratti {
         int Id PK "Identificativo univoco"
         int IdCategoria FK "Riferimento alla categoria del contratto"
-        string Descrizione "Descrizione contratto" varchar(255)
+        int IdContraente FK "Riferimento al contraente (cliente)"
+        int IdContrattoRiferito FK "Riferimento al contratto principale (per accordi quadro) e RTI mandante" --> il cliente a cui fatturiamo è quello riferito qui, altrimenti è lo stesso del contratto
+        string Descrizione varchar(255) "Descrizione contratto"
         date DataInizio "Data inizio"
         date DataFine "Data fine"
-        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
         datetime DataModifica "Data modifica"
     }
 
     TipiCategoriaContratto {
         int Id PK "Identificativo univoco"
-        string Tipo "Descrizione categoria contratto" %% 1 = Diretto con l'ente beneficiario; 2 = Tramite concessionario; 3 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandante; 4 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario; 5 = In subappalto; 6 = Accordo quadro
-    }
-
-    ContrattiContraenti {
-        int Id PK "Identificativo univoco"
-        int IdContratto FK "Riferimento al contratto"
-        int IdContraente FK "Riferimento al contraente (cliente)"
-        bool HasFatturazione "Indica se il contraente è destinatario di fatturazione"
-        Guid UtenteModifica "Utente modifica" uniqueidentifier
-        datetime DataModifica "Data modifica"
+        string Tipo varchar(75) "Descrizione categoria contratto" %% 1 = Diretto con l'ente beneficiario; 2 = Tramite concessionario; 3 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandante; 4 = Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario; 5 = In subappalto; 6 = Accordo quadro
     }
 
     Commesse {
         int Id PK "Identificativo univoco"
         string Codice UK "Codice commessa (codice interno Andreani comprensivo del CIG)"
-        string Descrizione "Descrizione" varchar(255)
+        string Descrizione varchar(255) "Descrizione"
         int IdContratto FK "Riferimento al contratto"
         int IdContraente FK "Riferimento all'ente beneficiario"
         int IdTipoNaturaContratto FK "Riferimento al tipo di contratto"
@@ -63,7 +56,7 @@ erDiagram
         int IdTipoStatoCommessa "Stato commessa"
         date DataInizio "Data inizio"
         date DataFine "Data fine"
-        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
         datetime DataModifica "Data modifica"
     }
 	
@@ -71,8 +64,7 @@ erDiagram
         int Id PK "Identificativo univoco"
         int IdCommessa FK UK "Riferimento alla commessa"
         int IdTipoAttivita FK UK "Riferimento al tipo attività"
-        int IdParametroEconomico FK PK "Riferimento al parametro economico"
-        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
         datetime DataModifica "Data modifica"
 	}
 	
@@ -81,9 +73,9 @@ erDiagram
         int IdCondizioniEconomiche FK "Riferimento alle condizioni economiche"
         short AnnoImposta "Anno di imposta" smallint
         int IdTipoParametro FK "Riferimento al tipo parametro"
-        decimal Valore "Valore parametro" decimal(13,8)
+        decimal Valore decimal(13,8) "Valore parametro"
         int IdTipoValore FK "Riferimento al tipo valore"
-        Guid UtenteModifica "Utente modifica" uniqueidentifier
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
         datetime DataModifica "Data modifica"
     }
 
@@ -116,13 +108,13 @@ erDiagram
 
     TipiEntrata {
         int Id PK "Identificativo univoco"
-        string CodiceAT varchar(10) "Codice tipologia entrata Andreani Tributi" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
+        string CodiceInterno varchar(10) "Codice tipologia entrata Andreani Tributi" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
         string CodiceAE varchar(3) "Codice tipologia entrata Agenzia Entrate"
-        string Tipo varchar(25) %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
-        string DescrizioneAT varchar(150) "Descrizione estesa tipologia entrata Andreani Tributi" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
+        string Tipo varchar(25) %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE su Risko)
+        string DescrizioneInterna varchar(150) "Descrizione estesa tipologia entrata Andreani Tributi" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
         string DescrizioneAE varchar(150) "Descrizione estesa tipologia entrata Agenzia Entrate"
-        int IdTipoNaturaEntrata FK int
-        int IdTipoMacroEntrata FK int
+        int IdTipoNaturaEntrata FK
+        int IdTipoMacroEntrata FK
     }
 
     TipiNaturaEntrata {
@@ -191,23 +183,17 @@ erDiagram
 
 ## Relazioni
 
-- Un **CLIENTE** può avere uno o più **ENTI** e un **ENTE** può appartenere a più **CLIENTI** (relazione N:N)
-- Un **ENTE** può avere una o più **COMMESSE** (relazione 1:N)
-- Una **COMMESSA** appartiene sempre ad un solo **ENTE**
-- Un **CLIENTE** può avere uno o più **INDIRIZZI** (relazione 1:N)
-- Un **INDIRIZZO** appartiene sempre ad un solo **CLIENTE**
-- Un **ENTE** può avere uno o più **INDIRIZZI** (relazione 1:N)
-- Un **INDIRIZZO** appartiene sempre ad un solo **ENTE**
-- Un **CLIENTE** può avere uno o più **CONTATTI** (relazione 1:N)
-- Un **CONTATTO** appartiene sempre ad un solo **CLIENTE**
-- Un **ENTE** può avere uno o più **CONTATTI** (relazione 1:N)
-- Un **CONTATTO** appartiene sempre ad un solo **ENTE**
+- Un **Contraente** può avere uno o più **Contratti** (relazione 1:N)
+- Un **Contratto** può avere uno o più **Contraenti** (relazione 1:N) (vedi accordo quadro)
+- Un **Contratto** può avere una o più **Commesse** (relazione 1:N)
+- Una **Commessa** appartiene sempre ad un solo **Contratto**
+- Un **Contraente** può avere uno o più **Indirizzi** (relazione 1:N)
+- Un **Indirizzo** appartiene sempre ad un solo **Contraente**
+- Un **Contraente** può avere uno o più **Contatti** (relazione 1:N)
+- Un **Contatto** appartiene sempre ad un solo **Contraente**
 
 Queste informazioni non sono presenti su Zucchetti, andrebbero gestite sul ms-contratti
 e rese disponibili per tutta la digital-platform
-
-- gestione di una tabella di referenti dell'ente/cliente (riferimento di un ufficio)
-- gestione delle sedi dell'ente/cliente
 
 - anagrafica dei responsabili di contratto/commerciali (a livello di ente o cliente?)
 serve per fare i SAL interni
@@ -221,8 +207,6 @@ prodotto (tipo tributo IMU TARI ICDS)
 servizi (RISCOSSIONE ACCERTAMENTO ORDINARIA)
 string tipo_contratto "colonna Tipo Gestione (appalto/concessione)"
 codice commessa zucchetti
-
-attività (tabella dei centri di costo)
 
 Informazioni bancarie (non nel dominio dei contratti)
 
@@ -243,7 +227,7 @@ serve per rendicontazione, versamenti e bollettini
 
 ### Valori TipiEntrata
 
-| CodiceAT      | Tipo                                      | DescrizioneAT                                              | IdTipoNaturaEntrata | IdTipoMacroEntrata |
+| CodiceInterno | Tipo                                      | DescrizioneInterna                                         | IdTipoNaturaEntrata | IdTipoMacroEntrata |
 |---------------|-------------------------------------------|------------------------------------------------------------|---------------------|--------------------|
 | ACQUEDOTTO    | IDRICO / REFLUE / ACQUEDOTTO              | Canoni idrici/acque reflue/aquedotto                       | 2                   | 5                  |
 | BDS_ALLOG     | BORSA DI STUDIO - Alloggi                 | Alloggi università                                         | 2                   | 6                  |
@@ -306,7 +290,7 @@ serve per rendicontazione, versamenti e bollettini
 | UNIVERSITA    | SERVIZI UNIVERSITARI                      | Servizi universitari                                       | 2                   | 6                  |
 | VOTIVE        | LUCI VOTIVE                               | Lampade votive                                             | 2                   | 7                  |
 
-### Valori TipiAttivita
+### Valori TipiAttivita (per ora solo quelli inerenti la riscossione coattiva)
 
 | Id  | Codice | Tipo                                              | CodiceCoge |
 |-----|--------|---------------------------------------------------|------------|

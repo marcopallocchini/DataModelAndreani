@@ -28,7 +28,8 @@ erDiagram
         string RagioneSociale varchar(150)
         date DataNascita Date
         date DataFine Date "Data decesso/cessazione"
-        datetime DataModifica DateTime
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
+        datetime DataModifica "Data modifica"
     }
 
     Indirizzi { %%TODO: vedi quella su DbContratti + valutare se mettere solo indirizzo di residenza/sede legale o gestire anche gli altri indirizzi
@@ -47,12 +48,14 @@ erDiagram
 		date DataCreazione Date
 		date DataArrivo Date
 		date DataValidazione Date
-		datetime data_modifica DateTime
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
+        datetime DataModifica "Data modifica"
     }
 
     CarichiDettaglio {
         int Id PK int
         int IdCarico FK int
+        int IdCommessa FK int
         int IdTipoProvenienza FK int %% può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
         int IdSoggetto FK int
         int IdTipoEntrata FK int
@@ -65,11 +68,33 @@ erDiagram
         date DataNotifica Date
         date DataScadenza Date %% se non presente, è uguale alla data notifica + x giorni (da configurare)
         date DataInizioInteressi Date %% Data da cui calcolare gli interessi: viene calcolata a partire dalla data scadenza + 1, oppure viene passata direttamente
-        int IdAttoSuccessivo FK int %%TODO: Atto successivo (tabella Atti): serve qui? Come lo vogliamo gestire?
+        date DataPrescrizione Date %% se non presente, viene calcolata secondo le indicazioni dell'ufficio, es.°: Data documento + 5 anni ???
+        int IdAttoSuccessivo FK int %%TODO: Atto successivo (tabella Atti): serve qui? Come lo vogliamo gestire? Vedere eventualmente quando tratteremo la definizione di atto e pratica
         int IdStato FK int
         bool HasRecuperoSpeseCarico Bit %%In Risko non viene quasi mai usato (dal 2015 solo 1 volta): serve per riuscire a recuperare le spese sostenute da Andreani per la notifica
+        string TargaVeicolo varchar(10)
+        string InfoVeicolo varchar(60) %% marca, modello
+        string InfoSanzione varchar(50) %% articolo della violazione cds o altra sanzione
+        
+        
+        TotInteressiAtti, TotSanzioniAtti, TotInteressiRateizzo sono campi calcolati che attualmente stanno in CarichiDettaglio, ma andrebbero spostati in CarichiDettaglioVoci: andranno quindi opportuamente codificati prendendoli da rs_AttiDettaglio
+        Annotazioni StatoAnnotazioni e campi DescCaricoX andranno mappati nelle note collegate al carico dettaglio
+        string KeyRuolo varchar(100)
+
+
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
+        datetime DataModifica "Data modifica"
     }
     
+    Note {
+        int Id PK "Identificativo univoco"
+        int NomeTabella FK varchar(30) %% indica a quale tabella si riferisce la nota (CarichiDettaglio, Carichi, Soggetti, ecc.)
+        int IdTabella FK int
+        string Testo nvarchar(400)
+        Guid UtenteModifica uniqueidentifier "Utente modifica"
+        datetime DataModifica "Data modifica"
+    }
+
     TipiProvenienza {
         int id PK "Identificativo univoco"
         string Tipo varchar(25) %% 1 = Manuale, 2 = Excel, 3 = Tracciato 290, 4 = Tracciato 600, 99 = TODO
@@ -82,7 +107,7 @@ erDiagram
 
     TipiStato {
         int id PK "Identificativo univoco"
-        string Tipo varchar(25) %% 1 = Attivo (ATT), 2 = Chiuso (CHS), 3 = Deceduto (DEC), 4 = ??? (DEL), 5 = Sospeso (SOS), 99 = TODO
+        string Tipo varchar(25) %% 1 = Attivo (ATT), 2 = Chiuso (CHS), 3 = Deceduto (DEC), 4 = Cancellato (eliminazione logica) (DEL), 5 = Sospeso (SOS), 99 = TODO
     }
 
     CarichiDettaglioVoci {
