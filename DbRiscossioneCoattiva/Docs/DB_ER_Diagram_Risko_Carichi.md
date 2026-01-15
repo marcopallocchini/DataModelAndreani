@@ -132,7 +132,7 @@ erDiagram
         string SollecitoOriginale "varchar(50) | Indica il numero del sollecito originale da cui è stato generato questo carico dettaglio (se presente)"
         string Sentenza "varchar(200) | Indica i riferimenti della sentenza (se presente)"
         int IdNormativa FK "tinyint | Normativa di riferimento"
-        string KeyRuolo "varchar(100) | Nota aggiuntiva sul carico" %% TODO: Indagare meglio a cosa serve questo campo in Risko
+        string KeyRuolo "varchar(100) | Nota aggiuntiva sul carico"
         string UtenteCreazione "varchar(100) | Utente creazione"
         datetime DataCreazione "datetime2(3) | Data creazione"
         string UtenteModifica "varchar(100) | Utente modifica"
@@ -332,6 +332,7 @@ erDiagram
 
 ## Note sulle entità
 CarichiDettaglio - IdTipoProvenienza - Tipo provenienza carico, può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
+CarichiDettaglio - KeyRuolo - TODO: Indagare meglio a cosa serve questo campo in Risko
 TipiStato - Legenda Risko: ATT = Attivo, CHS = Chiuso, DEC = Soggetto deceduto, DEL = Cancellato, SOS = Sospeso
 TipiNormative - DataFine - Se null significa che è quella attualmente in vigore
 TipiEntrata - CodiceInterno - VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE in Risko)
