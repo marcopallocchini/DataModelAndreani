@@ -15,36 +15,81 @@ Il database è composto da queste entità principali:
 ```mermaid 
 erDiagram
 
-Contratti ||--o{ Contraenti : "ha"
-Contratti }o--|| TipiCategoriaContratto : "categoria"
-Contraenti ||--o{ Indirizzi : "ha"
-Contraenti ||--o{ Contatti : "ha"
-Contatti }o--|| TipiContatto : "tipo"
-Commesse }o--|| Contratti : "appartiene"
-Commesse }o--|| Contraenti : "beneficiario"
-Commesse }o--|| TipiNaturaContratto : "natura"
-Commesse }o--|| TipiServizio : "servizio"
-Commesse }o--|| TipiEntrata : "entrata"
-Commesse }o--|| TipiStatoCommessa : "stato"
-Commesse ||--o{ CondizioniEconomiche : "ha"
-CondizioniEconomiche }o--|| TipiAttivita : "attivita"
-CondizioniEconomiche ||--o{ ParametriEconomici : "ha"
-ParametriEconomici }o--|| TipiParametro : "tipo parametro"
-ParametriEconomici }o--|| TipiValore : "tipo valore"
-TipiEntrata }o--|| TipiNaturaEntrata : "natura"
-TipiEntrata }o--|| TipiMacroEntrata : "macro categoria"
+    Contraenti ||--o{ ContrattiContraenti : "ha"
+    Contratti ||--o{ Contraenti : "ha"
+    Contratti }o--|| TipiCategoriaContratto : "categoria"
+    Contraenti ||--o{ Indirizzi : "ha"
+    Contraenti ||--o{ Contatti : "ha"
+    Contatti }o--|| TipiContatto : "tipo"
+    Commesse }o--|| Contratti : "appartiene"
+    Commesse }o--|| Contraenti : "beneficiario"
+    Commesse }o--|| TipiNaturaContratto : "natura"
+    Commesse }o--|| TipiServizio : "servizio"
+    Commesse }o--|| CodiciEntrata : "entrata"
+    Commesse }o--|| TipiStatoCommessa : "stato"
+    Commesse ||--o{ CondizioniEconomiche : "ha"
+    CondizioniEconomiche }o--|| TipiAttivita : "attivita"
+    CondizioniEconomiche ||--o{ ParametriEconomici : "ha"
+    ParametriEconomici }o--|| TipiParametro : "tipo parametro"
+    ParametriEconomici }o--|| TipiValore : "tipo valore"
+    CodiciEntrata }o--|| TipiNaturaEntrata : "natura"
+    CodiciEntrata }o--|| TipiMacroEntrata : "macro categoria"
 
-Contraenti {
-    int Id PK "Identificativo univoco"
-    string CodiceInterno UK "Codice interno Andreani" 
-    string CodiceFiscale "Codice fiscale" 
-    string PartitaIva "Partita IVA" 
-    string RagioneSociale "Ragione sociale" 
-    Guid UtenteModifica "Utente modifica"
-    datetime DataModifica "Data modifica"
-}
+    Contraenti {
+        int Id PK "Identificativo univoco"
+        string CodiceInterno UK "Codice interno Andreani" 
+        string CodiceFiscale "Codice fiscale" 
+        string PartitaIva "Partita IVA" 
+        string RagioneSociale "Ragione sociale" 
+        Guid UtenteModifica "Utente modifica"
+        datetime DataModifica "Data modifica"
+        string UtenteCreazione "varchar(100) | Utente creazione"
+        datetime DataCreazione "datetime2(3) | Data creazione"
+        string UtenteModifica "varchar(100) | Utente modifica"
+        datetime DataModifica "datetime2(3) | Data modifica"
+    }
 
-Contratti {
+    Indirizzi {
+        int Id PK "Identificativo univoco"
+        int IdContraente FK "Riferimento contraente"
+        string Presso "varchar(150) | Presso"
+        string Toponimo "varchar(15) | Toponimo"
+        string DenominazioneStradale "varchar(100) | Denominazione stradale"
+        string Civico "varchar(5) | Civico"
+        string Km "varchar(10) | Km"
+        string Esponente "varchar(10) | Esponente"
+        string Edificio "varchar(10) | Edificio"
+        string Scala "varchar(5) | Scala"
+        string Piano "varchar(5) | Piano"
+        string Interno "varchar(5) | Interno"
+        string Cap "varchar(12) | CAP"
+        string Comune "varchar(50) | Comune"
+        string Localita "varchar(50) | Localita"
+        string Provincia "varchar(2) | Provincia"
+        string Nazione "varchar(50) | Nazione"
+        string UtenteCreazione "varchar(100) | Utente creazione"
+        datetime DataCreazione "datetime2(3) | Data creazione"
+        string UtenteModifica "varchar(100) | Utente modifica"
+        datetime DataModifica "datetime2(3) | Data modifica"
+    }
+
+    Contatti {
+        int Id PK "int | Identificativo univoco"
+        int IdTipo FK "tinynt | Tipo contatto"
+        int IdContraente FK "int | Riferimento contraente"
+        string Contatto "varchar(254) | Contatto"
+        string UtenteCreazione "varchar(100) | Utente creazione"
+        datetime DataCreazione "datetime2(3) | Data creazione"
+        string UtenteModifica "varchar(100) | Utente modifica"
+        datetime DataModifica "datetime2(3) | Data modifica"
+    }
+
+    TipiContatto {
+        int Id PK "tinynt | Identificativo univoco"
+        string Tipo "varchar(15) | Tipo contatto"
+    }
+    
+    Contratti {
         int Id PK "Identificativo univoco"
         int IdCategoria FK "Riferimento alla categoria del contratto"
         int IdContraente FK "Riferimento al contraente (cliente)"
@@ -52,135 +97,122 @@ Contratti {
         string Descrizione "Descrizione contratto"
         date DataInizio "Data inizio"
         date DataFine "Data fine"
-        Guid UtenteModifica "Utente modifica"
-        datetime DataModifica "Data modifica"
-}
+        string UtenteCreazione "varchar(100) | Utente creazione"
+        datetime DataCreazione "datetime2(3) | Data creazione"
+        string UtenteModifica "varchar(100) | Utente modifica"
+        datetime DataModifica "datetime2(3) | Data modifica"
+    }
 
-TipiCategoriaContratto {
-    int Id PK "Identificativo univoco"
-    string Tipo "Descrizione categoria contratto" 
-}
+    TipiCategoriaContratto {
+        int Id PK "Identificativo univoco"
+        string Tipo "Descrizione categoria contratto" 
+    }
 
-Commesse {
-    int Id PK "Identificativo univoco"
-    string Codice UK "Codice commessa"
-    string Descrizione "Descrizione" 
-    int IdContratto FK "Riferimento al contratto"
-    int IdContraente FK "Riferimento ente beneficiario"
-    int IdTipoNaturaContratto FK "Tipo contratto"
-    int IdTipoServizio FK "Tipo servizio"
-    int IdTipoEntrata FK "Tipo entrata"
-    int IdTipoStatoCommessa FK "Stato commessa"
-    date DataInizio "Data inizio"
-    date DataFine "Data fine"
-    Guid UtenteModifica "Utente modifica" 
-    datetime DataModifica "Data modifica"
-}
+    Commesse {
+        int Id PK "Identificativo univoco"
+        string Codice UK "Codice commessa"
+        string Descrizione "Descrizione" 
+        int IdContratto FK "Riferimento al contratto"
+        int IdContraente FK "Riferimento ente beneficiario"
+        int IdTipoNaturaContratto FK "Tipo contratto"
+        int IdTipoServizio FK "Tipo servizio"
+        int IdTipoEntrata FK "Tipo entrata"
+        int IdTipoStatoCommessa FK "Stato commessa"
+        date DataInizio "Data inizio"
+        date DataFine "Data fine"
+        string UtenteCreazione "varchar(100) | Utente creazione"
+        datetime DataCreazione "datetime2(3) | Data creazione"
+        string UtenteModifica "varchar(100) | Utente modifica"
+        datetime DataModifica "datetime2(3) | Data modifica"
+    }
 
-CondizioniEconomiche {
-    int Id PK "Identificativo univoco"
-    int IdCommessa FK "Riferimento alla commessa"
-    int IdTipoAttivita FK "Riferimento al tipo attivita"
-    Guid UtenteModifica "Utente modifica" 
-    datetime DataModifica "Data modifica"
-}
+    CondizioniEconomiche {
+        int Id PK "Identificativo univoco"
+        int IdCommessa FK "Riferimento alla commessa"
+        int IdTipoAttivita FK "Riferimento al tipo attivita"
+        string UtenteCreazione "varchar(100) | Utente creazione"
+        datetime DataCreazione "datetime2(3) | Data creazione"
+        string UtenteModifica "varchar(100) | Utente modifica"
+        datetime DataModifica "datetime2(3) | Data modifica"
+    }
 
-ParametriEconomici {
-    int Id PK "Identificativo univoco"
-    int IdCondizioniEconomiche FK "Condizioni economiche"
-    short AnnoImposta "Anno di imposta" 
-    int IdTipoParametro FK "Tipo parametro"
-    decimal Valore "Valore parametro"
-    int IdTipoValore FK "Tipo valore"
-    Guid UtenteModifica "Utente modifica"
-    datetime DataModifica "Data modifica"
-}
+    ParametriEconomici {
+        int Id PK "Identificativo univoco"
+        int IdCondizioniEconomiche FK "Condizioni economiche"
+        short AnnoImposta "Anno di imposta" 
+        int IdTipoParametro FK "Tipo parametro"
+        decimal Valore "Valore parametro"
+        int IdTipoValore FK "Tipo valore"
+        string UtenteCreazione "varchar(100) | Utente creazione"
+        datetime DataCreazione "datetime2(3) | Data creazione"
+        string UtenteModifica "varchar(100) | Utente modifica"
+        datetime DataModifica "datetime2(3) | Data modifica"
+    }
 
-TipiParametro {
-    int Id PK "Identificativo univoco"
-    string Tipo "Descrizione parametro"
-}
+    TipiParametro {
+        int Id PK "Identificativo univoco"
+        string Tipo "Descrizione parametro"
+    }
 
-TipiValore {
-    int Id PK "Identificativo univoco"
-    string Tipo "Descrizione tipo valore"
-}
+    TipiValore {
+        int Id PK "Identificativo univoco"
+        string Tipo "Descrizione tipo valore"
+    }
 
-TipiAttivita {
-    int Id PK "Identificativo univoco"
-    string Codice "Codice attivita"
-    string Tipo "Descrizione attivita"
-    string CodiceCoge "Codice COGE"
-}
+    TipiAttivita {
+        int Id PK "Identificativo univoco"
+        string Codice "Codice attivita"
+        string Tipo "Descrizione attivita"
+        string CodiceCoge "Codice COGE"
+    }
 
-TipiNaturaContratto {
-    int Id PK "Identificativo univoco"
-    string Tipo "Descrizione natura contratto"
-}
+    TipiNaturaContratto {
+        int Id PK "Identificativo univoco"
+        string Tipo "Descrizione natura contratto"
+    }
 
-TipiServizio {
-    int Id PK "Identificativo univoco"
-    string Tipo "Descrizione servizio"
-}
+    TipiServizio {
+        int Id PK "Identificativo univoco"
+        string Tipo "Descrizione servizio"
+    }
 
-TipiEntrata {
-    int Id PK "Identificativo univoco"
-    string CodiceAT "Codice AT" 
-    string CodiceAE "Codice AE"
-    string Tipo "Descrizione entrata"
-    string DescrizioneAT "Descrizione estesa AT"
-    string DescrizioneAE "Descrizione estesa AE"
-    int IdTipoNaturaEntrata FK "Natura entrata"
-    int IdTipoMacroEntrata FK "Macro entrata"
-}
+    CodiciEntrata {
+        int Id PK "smallint | Identificativo univoco"
+        string CodiceInterno varchar(10) "Codice tipologia entrata Andreani Tributi: SERVE SOLO PER LA MIGRAZIONE, POI SI PUO' TOGLIERE!!!" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
+        string CodiceAE "varchar(10) | Codice entrata Agenzia Entrate: se non disponibile, ne usiamo uno inventato"
+        int IdTipoNaturaEntrata FK "Natura entrata"
+        int IdTipoMacroEntrata FK "tinyint | Macro entrata"
+        string IdTipoImportoVoce FK "int | Indica tipo importo per entrata"
+        bool IsDefault "bit | Indica se è un codice entrata di default (true) o una forzatura (false)"
+        int IdMacroVoceEntrata FK "tinyint | Macro voce entrata"
+        string DenominazioneEntrata "varchar(120) | Denominazione entrata"
+        string DenominazioneEstesa "varchar(160) | Denominazione estesa"
+    }
 
-TipiNaturaEntrata {
-    int Id PK "Identificativo univoco"
-    string Tipo "Tipo natura entrata"
-}
+    TipiNaturaEntrata {
+        int Id PK "tinyint | Identificativo univoco"
+        string Tipo "varchar(20) | Tipo natura entrata"
+    }
 
-TipiMacroEntrata {
-    int Id PK "Identificativo univoco"
-    string Tipo "Tipo macro entrata"
-}
+    TipiMacroEntrata {
+        int Id PK "tinyint | Identificativo univoco"
+        string Tipo "varchar(40) | Tipo macro entrata (per raggruppamenti BI)"
+    }
 
-TipiStatoCommessa {
-    int Id PK "Identificativo univoco"
-    string Tipo "Stato commessa"
-}
+    TipiImportoVoce {
+        int id PK "tinyint | Identificativo univoco"
+        string Tipo "varchar(25) | Tipo importo voce" %% 1 = Netto (N), 2 = Accessorio (A)
+    }
 
-Indirizzi {
-    int Id PK "Identificativo univoco"
-    int IdContraente FK "Riferimento contraente"
-    string Presso "Presso"
-    string Toponimo "Toponimo"
-    string DenominazioneStradale "Denominazione stradale"
-    string Civico "Civico"
-    string Km "Km"
-    string Esponente "Esponente"
-    string Edificio "Edificio"
-    string Scala "Scala"
-    string Piano "Piano"
-    string Interno "Interno"
-    string Cap "CAP"
-    string Comune "Comune"
-    string Localita "Localita"
-    string Provincia "Provincia"
-    string Nazione "Nazione"
-}
+    MacroVociEntrata {
+        int Id PK "tinyint | Identificativo univoco"
+        string Descrizione "varchar(30) | Descrizione" %% TODO select Corrispondenza, count(*) from rs_CodiciTributo group by Corrispondenza order by Corrispondenza
+    }
 
-Contatti {
-    int Id PK "Identificativo univoco"
-    int IdTipo FK "Tipo contatto"
-    int IdContraente FK "Riferimento contraente"
-    string Contatto "Contatto"
-    string Nota "Nota"
-}
-
-TipiContatto {
-    int Id PK "Identificativo univoco"
-    string Tipo "Tipo contatto"
-}
+    TipiStatoCommessa {
+        int Id PK "tinyint | Identificativo univoco"
+        string Tipo "varchar(30) | Stato commessa"
+    }
 
 ```
 
