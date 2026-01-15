@@ -14,7 +14,6 @@ Il database è composto da queste entità principali:
 
 ```mermaid 
 erDiagram
-
     Contraenti ||--o{ ContrattiContraenti : "ha"
     Contratti ||--o{ Contraenti : "ha"
     Contratti }o--|| TipiCategoriaContratto : "categoria"
@@ -25,15 +24,15 @@ erDiagram
     Commesse }o--|| Contraenti : "beneficiario"
     Commesse }o--|| TipiNaturaContratto : "natura"
     Commesse }o--|| TipiServizio : "servizio"
-    Commesse }o--|| CodiciEntrata : "entrata"
+    Commesse }o--|| TipiEntrata : "entrata"
     Commesse }o--|| TipiStatoCommessa : "stato"
     Commesse ||--o{ CondizioniEconomiche : "ha"
     CondizioniEconomiche }o--|| TipiAttivita : "attivita"
     CondizioniEconomiche ||--o{ ParametriEconomici : "ha"
     ParametriEconomici }o--|| TipiParametro : "tipo parametro"
     ParametriEconomici }o--|| TipiValore : "tipo valore"
-    CodiciEntrata }o--|| TipiNaturaEntrata : "natura"
-    CodiciEntrata }o--|| TipiMacroEntrata : "macro categoria"
+    TipiEntrata }o--|| TipiNaturaEntrata : "natura"
+    TipiEntrata }o--|| TipiMacroEntrata : "macro categoria"
 
     Contraenti {
         int Id PK "Identificativo univoco"
@@ -176,17 +175,13 @@ erDiagram
         string Tipo "Descrizione servizio"
     }
 
-    CodiciEntrata {
-        int Id PK "smallint | Identificativo univoco"
-        string CodiceInterno varchar(10) "Codice tipologia entrata Andreani Tributi: SERVE SOLO PER LA MIGRAZIONE, POI SI PUO' TOGLIERE!!!" %% Vedi valori tabella sotto (ex VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE)
-        string CodiceAE "varchar(10) | Codice entrata Agenzia Entrate: se non disponibile, ne usiamo uno inventato"
-        int IdTipoNaturaEntrata FK "Natura entrata"
+    TipiEntrata {
+        int Id PK "tinyint | Identificativo univoco"
+        string CodiceInterno "varchar(10) | Codice tipologia entrata interno"
+        string Tipo "varchar(25) | Tipo entrata"
+        string DescrizioneInterna varchar(150) "Descrizione estesa tipologia entrata Andreani Tributi"
+        int IdTipoNaturaEntrata FK "tinyint | Natura entrata"
         int IdTipoMacroEntrata FK "tinyint | Macro entrata"
-        string IdTipoImportoVoce FK "int | Indica tipo importo per entrata"
-        bool IsDefault "bit | Indica se è un codice entrata di default (true) o una forzatura (false)"
-        int IdMacroVoceEntrata FK "tinyint | Macro voce entrata"
-        string DenominazioneEntrata "varchar(120) | Denominazione entrata"
-        string DenominazioneEstesa "varchar(160) | Denominazione estesa"
     }
 
     TipiNaturaEntrata {
@@ -197,16 +192,6 @@ erDiagram
     TipiMacroEntrata {
         int Id PK "tinyint | Identificativo univoco"
         string Tipo "varchar(40) | Tipo macro entrata (per raggruppamenti BI)"
-    }
-
-    TipiImportoVoce {
-        int id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(25) | Tipo importo voce" %% 1 = Netto (N), 2 = Accessorio (A)
-    }
-
-    MacroVociEntrata {
-        int Id PK "tinyint | Identificativo univoco"
-        string Descrizione "varchar(30) | Descrizione" %% TODO select Corrispondenza, count(*) from rs_CodiciTributo group by Corrispondenza order by Corrispondenza
     }
 
     TipiStatoCommessa {
@@ -280,68 +265,7 @@ erDiagram
 - Costo fisso per avviso
 - Costo variabile per avviso
 
-### Contratti
-IdContrattoRiferito --> il cliente a cui fatturiamo è quello riferito qui, altrimenti è lo stesso del contratto
-
-## Esempi di contratti
-
-| Categoria contratto                                                      | Cliente fatturazione | Cliente contratto | Ente beneficiario |
-|--------------------------------------------------------------------------|----------------------|-------------------|-------------------|
-| Diretto con l'ente beneficiario                                          | Comune X             | Comune X          | Comune X          |
-| Tramite concessionario                                                   | Sienambiente         | Sienambiente      | Comune A          |
-| Tramite concessionario                                                   | Sienambiente         | Sienambiente      | Comune B          |
-| Tramite raggruppamento temporaneo di imprese (RTI) - Mandante            | Econord              | Malnate           | Malnate           |
-| In subappalto                                                            | Econord              | Econord           | Malnate           |
-| Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario          | Savona               | ICA               | Savona            |
-| Tramite raggruppamento temporaneo di imprese (RTI) - Mandante            | ICA                  | Albisola          | Albisola          |
-| Accordo quadro                                                           | Comune C             | Unione Montana    | Comune C          |
-| Accordo quadro                                                           | Comune D             | Unione Montana    | Comune D          |
-
-## Relazioni
-
-- Un **Contraente** può avere uno o più **Contratti** (relazione 1:N)
-- Un **Contratto** può avere uno o più **Contraenti** (relazione 1:N) (vedi accordo quadro)
-- Un **Contratto** può avere una o più **Commesse** (relazione 1:N)
-- Una **Commessa** appartiene sempre ad un solo **Contratto**
-- Un **Contraente** può avere uno o più **Indirizzi** (relazione 1:N)
-- Un **Indirizzo** appartiene sempre ad un solo **Contraente**
-- Un **Contraente** può avere uno o più **Contatti** (relazione 1:N)
-- Un **Contatto** appartiene sempre ad un solo **Contraente**
-
-Queste informazioni non sono presenti su Zucchetti, andrebbero gestite sul ms-contratti
-e rese disponibili per tutta la digital-platform
-
-- anagrafica dei responsabili di contratto/commerciali (a livello di ente o cliente?)
-serve per fare i SAL interni
-oppure per gli operatori per capire a chi rivolgersi in caso di controversie
-
-simone -> ci passa i dati
-
-le abbiamo su Zucchetti
-tabelle prodotti servizi
-prodotto (tipo tributo IMU TARI ICDS)
-servizi (RISCOSSIONE ACCERTAMENTO ORDINARIA)
-string tipo_contratto "colonna Tipo Gestione (appalto/concessione)"
-codice commessa zucchetti
-
-Informazioni bancarie (non nel dominio dei contratti)
-
-commessa
-prodotto
-data validazione
-stato (chiuso o sostituito)
-
-è un'anagrafica a parte bisogna gestire anche la tipologia di pagamento
-serve per rendicontazione, versamenti e bollettini
-
-# approccio alla migrazione
-
-1. chiamo zucchetti e restituisce tutta la lista/liste
-2. data la insert sul data model nuovo devo ricavarmi la chiave per recuperare
-    CodEnte risko
-    CodCommessa risko
-
-### Valori TipiEntrata
+### TipiEntrata
 
 | CodiceInterno | Tipo                                      | DescrizioneInterna                                         | IdTipoNaturaEntrata | IdTipoMacroEntrata |
 |---------------|-------------------------------------------|------------------------------------------------------------|---------------------|--------------------|
@@ -406,7 +330,7 @@ serve per rendicontazione, versamenti e bollettini
 | UNIVERSITA    | SERVIZI UNIVERSITARI                      | Servizi universitari                                       | 2                   | 6                  |
 | VOTIVE        | LUCI VOTIVE                               | Lampade votive                                             | 2                   | 7                  |
 
-### Valori TipiAttivita (per ora solo quelli inerenti la riscossione coattiva)
+### TipiAttivita (per ora solo quelli inerenti la riscossione coattiva)
 
 | Id  | Codice | Tipo                                              | CodiceCoge |
 |-----|--------|---------------------------------------------------|------------|
@@ -423,3 +347,65 @@ serve per rendicontazione, versamenti e bollettini
 | 11  | RVNOI  | Riscossione Volontaria no IVA                     |            |
 | 12  | RCNOI  | Riscossione Coattiva no IVA                       |            |
 | 13  | SPESE  | Spese                                             | SPESE      |
+
+### Note sulle entità
+Contratti - IdContrattoRiferito --> il cliente a cui fatturiamo è quello riferito qui, altrimenti è lo stesso del contratto
+TipiEntrata - VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE in Risko
+
+## Esempi di contratti
+
+| Categoria contratto                                                      | Cliente fatturazione | Cliente contratto | Ente beneficiario |
+|--------------------------------------------------------------------------|----------------------|-------------------|-------------------|
+| Diretto con l'ente beneficiario                                          | Comune X             | Comune X          | Comune X          |
+| Tramite concessionario                                                   | Sienambiente         | Sienambiente      | Comune A          |
+| Tramite concessionario                                                   | Sienambiente         | Sienambiente      | Comune B          |
+| Tramite raggruppamento temporaneo di imprese (RTI) - Mandante            | Econord              | Malnate           | Malnate           |
+| In subappalto                                                            | Econord              | Econord           | Malnate           |
+| Tramite raggruppamento temporaneo di imprese (RTI) - Mandatario          | Savona               | ICA               | Savona            |
+| Tramite raggruppamento temporaneo di imprese (RTI) - Mandante            | ICA                  | Albisola          | Albisola          |
+| Accordo quadro                                                           | Comune C             | Unione Montana    | Comune C          |
+| Accordo quadro                                                           | Comune D             | Unione Montana    | Comune D          |
+
+## Relazioni
+
+- Un **Contraente** può avere uno o più **Contratti** (relazione 1:N)
+- Un **Contratto** può avere uno o più **Contraenti** (relazione 1:N) (vedi accordo quadro)
+- Un **Contratto** può avere una o più **Commesse** (relazione 1:N)
+- Una **Commessa** appartiene sempre ad un solo **Contratto**
+- Un **Contraente** può avere uno o più **Indirizzi** (relazione 1:N)
+- Un **Indirizzo** appartiene sempre ad un solo **Contraente**
+- Un **Contraente** può avere uno o più **Contatti** (relazione 1:N)
+- Un **Contatto** appartiene sempre ad un solo **Contraente**
+
+Queste informazioni non sono presenti su Zucchetti, andrebbero gestite sul ms-contratti
+e rese disponibili per tutta la digital-platform
+
+- anagrafica dei responsabili di contratto/commerciali (a livello di ente o cliente?)
+serve per fare i SAL interni
+oppure per gli operatori per capire a chi rivolgersi in caso di controversie
+
+simone -> ci passa i dati
+
+le abbiamo su Zucchetti
+tabelle prodotti servizi
+prodotto (tipo tributo IMU TARI ICDS)
+servizi (RISCOSSIONE ACCERTAMENTO ORDINARIA)
+string tipo_contratto "colonna Tipo Gestione (appalto/concessione)"
+codice commessa zucchetti
+
+Informazioni bancarie (non nel dominio dei contratti)
+
+commessa
+prodotto
+data validazione
+stato (chiuso o sostituito)
+
+è un'anagrafica a parte bisogna gestire anche la tipologia di pagamento
+serve per rendicontazione, versamenti e bollettini
+
+# approccio alla migrazione
+
+1. chiamo zucchetti e restituisce tutta la lista/liste
+2. data la insert sul data model nuovo devo ricavarmi la chiave per recuperare
+    CodEnte risko
+    CodCommessa risko

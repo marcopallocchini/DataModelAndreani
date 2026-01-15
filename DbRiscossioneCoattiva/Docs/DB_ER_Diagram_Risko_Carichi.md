@@ -29,9 +29,8 @@ erDiagram
     CarichiDettaglio }o--|| TipiStato : "stato"
     CarichiDettaglio }o--|| TipiNormative : "normativa"
     CarichiDettaglio ||--o{ CarichiDettaglioVoci : "ha"
-    CarichiDettaglioVoci }o--|| CodiciEntrata : "codifica"
-    CarichiDettaglioVoci }o--|| TipiImportoVoce : "tipo"
-    CarichiDettaglioVoci }o--|| MacroVociEntrata : "macro codifica"
+    CodiciEntrata }o--|| TipiImportoVoce : "tipo"
+    CodiciEntrata }o--|| MacroVociEntrata : "macro codifica"
     
     Soggetti {
         int Id PK "Identificativo univoco"
@@ -91,12 +90,12 @@ erDiagram
     
     TipiPersona {
         int Id PK "tinynt | Identificativo univoco"
-        string Tipo "varchar(20) | Tipo persona" %% 1 = Persona fisica, 2 = Persona giuridica
+        string Tipo "varchar(20) | Tipo persona"
     }
 
     TipiNaturaSoggetto {
         int Id PK "tinynt | Identificativo univoco"
-        string Natura "varchar(25) | Sesso/Natura giuridica soggetto" %% 1 = Maschio, 2 = Femmina, 3 = Ditta individuale, 4 = Pubblica amministrazione, 5 = Società di persone, 6 = Società di capitali, 99 = TODO
+        string Natura "varchar(25) | Sesso/Natura giuridica soggetto"
     }
 
     Carichi {
@@ -115,7 +114,7 @@ erDiagram
         int Id PK "int | Identificativo univoco"
         int IdCarico FK "int | Riferimento carico"
         int IdCommessa FK "int | Riferimento commessa"
-        int IdTipoProvenienza FK "tinyint | Tipo provenienza carico" %% può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
+        int IdTipoProvenienza FK "tinyint | Tipo provenienza carico"
         int IdTipoDocumento FK "tinyint | Tipo documento da riscuotere"
         string NumeroDocumento "varchar(50) | Numero documento da riscuotere"
         date DataDocumento "date | Data documento da riscuotere"
@@ -145,7 +144,7 @@ erDiagram
         int IdCaricoDettaglio FK "int | Riferimento carico dettaglio"
         int IdCaricoDettaglioPadre FK "int | Riferimento carico dettaglio padre (per gestire gli eredi)"
         int IdRelazione FK "tinyint | Tipo relazione tra i soggetti del carico"
-        decimal QuotaCarico "decimal(5,2) | Percentuale di 'possesso' del carico da parte del soggetto erede (per default 100)"
+        decimal QuotaCarico "decimal(5,2) | Percentuale di 'possesso' del carico da parte del soggetto erede (default: 100)"
         string UtenteCreazione "varchar(100) | Utente creazione"
         datetime DataCreazione "datetime2(3) | Data creazione"
         string UtenteModifica "varchar(100) | Utente modifica"
@@ -154,14 +153,14 @@ erDiagram
 
     TipiRelazioniSoggettiCarichiDettaglio {
         int Id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(50) | Tipo relazione" %% es°.: 1 = Debitore principale, 2 = Coobbligato, 3 = Esecutato, 4 = Terzo, ecc. TODO: prendi le relazioni dal tracciato 600
+        string Tipo "varchar(50) | Tipo relazione"
     }
     
     TipiNormative {
         int Id PK "tinyint | Identificativo univoco"
         string Tipo "varchar(100) | Normativa di riferimento"
         date DataInizio "date | Data inizio validità"
-        date DataFine "date | Data fine validità" %% se null significa che è quella attualmente in vigore
+        date DataFine "date | Data fine validità"
     }
 
     CarichiDettaglioVoci {
@@ -176,11 +175,32 @@ erDiagram
         datetime DataModifica "datetime2(3) | Data modifica"
     }
 
+    CodiciEntrata {
+        int Id PK "smallint | Identificativo univoco"
+        int IdTipoEntrata FK "int | Riferimento tipo entrata (tabella TipiEntrata)"
+        string CodiceAE "varchar(10) | Codice entrata Agenzia Entrate: se non disponibile, ne usiamo uno inventato"
+        string IdTipoImportoVoce FK "int | Indica tipo importo per entrata"
+        bool IsDefault "bit | Indica se è un codice entrata di default (true) o una forzatura (false)"
+        int IdMacroVoceEntrata FK "tinyint | Macro voce entrata"
+        string DenominazioneEntrata "varchar(120) | Denominazione entrata"
+        string DenominazioneEstesa "varchar(160) | Denominazione estesa"
+    }
+
+    TipiImportoVoce {
+        int id PK "tinyint | Identificativo univoco"
+        string Tipo "varchar(25) | Tipo importo voce"
+    }
+
+    MacroVociEntrata {
+        int Id PK "tinyint | Identificativo univoco"
+        string Descrizione "varchar(30) | Descrizione"
+    }
+
     Note {
         int Id PK "Identificativo univoco"
-        int NomeTabella FK varchar(48) %% indica a quale tabella si riferisce la nota (CarichiDettaglio, Carichi, Soggetti, ecc.)
-        int IdTabella FK int
-        string Testo nvarchar(400)
+        int NomeTabella FK "varchar(48) | Indica a quale tabella si riferisce la nota (CarichiDettaglio, Carichi, Soggetti, ecc.)"
+        int IdTabella FK "int | Identificativo univoco della riga della tabella a cui si riferisce la nota"
+        string Testo "nvarchar(400) | Testo della nota"
         string UtenteCreazione "varchar(100) | Utente creazione"
         datetime DataCreazione "datetime2(3) | Data creazione"
         string UtenteModifica "varchar(100) | Utente modifica"
@@ -189,20 +209,132 @@ erDiagram
 
     TipiProvenienza {
         int id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(25) | Tipo provenienza" %% 1 = Manuale, 2 = Excel, 3 = Tracciato 290, 4 = Tracciato 600, 99 = TODO
+        string Tipo "varchar(30) | Tipo provenienza"
     }
 
     TipiDocumento {
         int id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(25) | Tipologia documento" %% 1 = Avviso di accertamento, 2 = Cartella di pagamento, 3 = Avviso bonario, 4 = Ordinanza ingiunzione, 5 = Altri documenti, 99 = TODO VEDI Gruppo = 'TIPO.DOC' su TABELLE
+        string CodiceAT "varchar(6) | Codice interno Andreani: SERVE SOLO PER LA MIGRAZIONE, POI VERRA' ELIMINATO!!!"
+        string Tipo "varchar(25) | Tipologia documento"
     }
 
     TipiStato {
         int id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(25) | Stato carico" %% 1 = Attivo (ATT), 2 = Chiuso (CHS), 3 = Soggetto deceduto (DEC), 4 = Cancellato (DEL), 5 = Sospeso (SOS), 6 = Annullato dall'Ente, 99 = TODO
+        string Tipo "varchar(25) | Stato carico"
     }
 	
 ```
+
+### TipiPersona
+1. Persona fisica
+2. Persona giuridica
+
+### TipiNaturaSoggetto
+1. Maschio
+2. Femmina
+3. Pubblica amministrazione
+4. Ditta individuale
+5. Società di persone
+6. Società di capitali
+99. Altro / Non specificato
+
+### TipiRelazioniSoggettiCarichiDettaglio
+1. Debitore principale
+2. Coobbligato
+3. Esecutato
+4. Terzo
+5. TODO: prendi le relazioni dal tracciato 600
+
+### TipiProvenienza
+1. Manuale
+2. Excel
+3. Tracciato 290
+4. Tracciato 600
+5. Migrazione da altro sistema
+99 = Altro TODO: Vedere su Risko
+
+### TipiImportoVoce
+1. Netto
+2. Accessorio
+
+### MacroVociEntrata
+1. 
+2. ADDIZIONALICARICO
+3. ADDIZIONALICARICO_
+4. ARROTONDAMENTOCARICO
+5. ASSLEGALE
+6. DIRITTI
+7. DIRITTIFERMO
+8. DIRITTIPREFERMO
+9. DIRITTITRIBUNALE
+10. DIRITTIUFFGIUDIZIARIO
+11. DIRITTIUFFRISCOSSIONE
+12. ECCEDENZA
+13. IMPOSTACARICO
+14. INTERESSI
+15. INTERESSICARICO
+16. INTERESSIRATEIZZO
+17. ISCRIZIONEIPOTECA
+18. IVACARICO
+19. MAGGIORAZIONICARICO
+20. MARCHEBOLLO
+21. PIGNORAMENTOIMM
+22. PIGNORAMENTOMOB
+23. PIGNORAMENTOTERZI
+24. PROCCONCORSUALI
+25. RIMBORSIUFFICIALI
+26. SANZIONI
+27. SANZIONICARICO
+28. SPESEACI
+29. SPESEATTO
+30. SPESECARICO
+31. SPESECIAA
+32. SPESESISTER
+33. SPESEVARIE
+34. SURROGA
+
+### TipiDocumento
+| Id | CodiceAT | Tipo                                     |
+|----|----------|------------------------------------------|
+| 1  | ACC      | Accertamento                             |
+| 2  | AFF      | Canone affitto                           |
+| 3  | AVOP     | Avviso omesso/parziale pagamento         |
+| 4  | AVP      | Avviso di pagamento                      |
+| 5  | AVV      | Avviso                                   |
+| 6  | BOLL     | Bolletta                                 |
+| 7  | CAN      | Canone                                   |
+| 8  | DET      | Determina                                |
+| 9  | DIFF     | Diffida                                  |
+| 10 | DRBDS    | Determina revoca borsa di studio         |
+| 11 | FAT      | Fattura                                  |
+| 12 | ING      | Ingiunzione                              |
+| 13 | INT_C    | Recupero interessi coattiva              |
+| 14 | INT_CR   | Recupero interessi rate coattiva         |
+| 15 | LIQ      | Liquidazione                             |
+| 16 | ONER     | Oneri                                    |
+| 17 | ORD      | Ordinanza                                |
+| 18 | PERC     | Permesso costruzione                     |
+| 19 | PROV     | Provvedimento                            |
+| 20 | SANZ     | Recupero sanzioni coattiva               |
+| 21 | SENT     | Sentenza                                 |
+| 22 | SOL      | Sollecito                                |
+| 23 | SPAP     | Recupero spese e/o oneri coattiva        |
+| 24 | VERB     | Verbale                                  |
+| 25 | VERT     | Vertenza                                 |
+
+### TipiStato
+1 = Attivo
+2 = Chiuso
+3 = Soggetto deceduto
+4 = Cancellato
+5 = Sospeso
+6 = Annullato dall'Ente
+
+## Note sulle entità
+CarichiDettaglio - IdTipoProvenienza - Tipo provenienza carico, può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
+TipiStato - Legenda Risko: ATT = Attivo, CHS = Chiuso, DEC = Soggetto deceduto, DEL = Cancellato, SOS = Sospeso
+TipiNormative - DataFine - Se null significa che è quella attualmente in vigore
+TipiEntrata - CodiceInterno - VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE in Risko)
 
 ## Relazioni
 
