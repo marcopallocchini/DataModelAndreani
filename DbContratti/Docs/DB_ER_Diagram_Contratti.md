@@ -149,20 +149,20 @@ erDiagram
     }
 
     TipiParametro {
-        int Id PK "Identificativo univoco"
+        int Id PK "tinyint | Identificativo univoco"
         string Tipo "Descrizione parametro"
     }
 
     TipiValore {
-        int Id PK "Identificativo univoco"
+        int Id PK "tinyint | Identificativo univoco"
         string Tipo "Descrizione tipo valore"
     }
 
     TipiAttivita {
-        int Id PK "Identificativo univoco"
-        string Codice "Codice attivita"
-        string Tipo "Descrizione attivita"
-        string CodiceCoge "Codice COGE"
+        int Id PK "tinyint | Identificativo univoco"
+        string Codice "varchar(5) | Codice attività"
+        string Tipo "varchar(100) | Descrizione attività"
+        String CodiceCoge "varchar(5) | Codice COGE"
     }
 
     TipiNaturaContratto {
@@ -179,7 +179,7 @@ erDiagram
         int Id PK "tinyint | Identificativo univoco"
         string CodiceInterno "varchar(10) | Codice tipologia entrata interno"
         string Tipo "varchar(25) | Tipo entrata"
-        string DescrizioneInterna varchar(150) "Descrizione estesa tipologia entrata Andreani Tributi"
+        string DescrizioneInterna "varchar(150) | Descrizione estesa tipologia entrata"
         int IdTipoNaturaEntrata FK "tinyint | Natura entrata"
         int IdTipoMacroEntrata FK "tinyint | Macro entrata"
     }
@@ -239,6 +239,9 @@ erDiagram
 1. Aperta
 2. Chiusa
 3. Sospesa fino a rinnovo
+
+### TipiParametro
+1. Aggio TODO: definire gli altri tipi parametro
 
 ### TipiValore
 1. Percentuale
