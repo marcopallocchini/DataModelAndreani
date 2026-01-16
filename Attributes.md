@@ -232,7 +232,7 @@ public class Indirizzo
 {
     public string Nazione { get; set; }
 
-    [PostalCode(CampoNazione)]
+    [PostalCode(Nazione)]
     public string CAP { get; set; }
 }
 ```
