@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Elementi di soluzione/">
+    <File Path="Attributes.md" />
     <File Path="Docs/Regole_nomenclatura_database.md" />
   </Folder>
   <Project Path="DbContratti/DbContratti.csproj" />

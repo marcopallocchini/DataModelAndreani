@@ -8,7 +8,10 @@ namespace DbContratti.Models
         public override bool IsValid(object? value)
         {
             var partitaIva = value as string;
-            if (string.IsNullOrEmpty(partitaIva) || partitaIva.Length != 11 || !long.TryParse(partitaIva, out _))
+            if (partitaIva is null)
+                return true; // Campo opzionale: valido se null
+
+            if (partitaIva.Length == 0 || partitaIva.Length != 11 || !long.TryParse(partitaIva, out _))
                 return false;
 
             // Se inizia con 8 o 9: codice fiscale numerico, valido senza ulteriori controlli

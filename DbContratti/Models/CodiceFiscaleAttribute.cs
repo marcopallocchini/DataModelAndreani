@@ -9,7 +9,10 @@ namespace DbContratti.Models
         public override bool IsValid(object? value)
         {
             var cf = value as string;
-            if (string.IsNullOrEmpty(cf))
+            if (cf is null)
+                return true; // Campo opzionale: valido se null
+
+            if (cf.Length == 0)
                 return false;
 
             // Codice fiscale numerico (11 cifre, inizia con 8 o 9)

@@ -35,170 +35,167 @@ erDiagram
     TipiEntrata }o--|| TipiMacroEntrata : "macro categoria"
 
     Contraenti {
-        int Id PK "Identificativo univoco"
-        string CodiceInterno UK "Codice interno Andreani" 
-        string CodiceFiscale "Codice fiscale" 
-        string PartitaIva "Partita IVA" 
-        string RagioneSociale "Ragione sociale" 
-        Guid UtenteModifica "Utente modifica"
-        datetime DataModifica "Data modifica"
-        string UtenteCreazione "varchar(100) | Utente creazione"
-        datetime DataCreazione "datetime2(3) | Data creazione"
-        string UtenteModifica "varchar(100) | Utente modifica"
-        datetime DataModifica "datetime2(3) | Data modifica"
+        int Id PK               "int          |      | Identificativo univoco"
+        string CodiceInterno UK "varchar(20)  |      | Codice interno"
+        string CodiceFiscale    "varchar(16)  | Null | Codice fiscale"
+        string PartitaIva       "varchar(11)  |      | Partita IVA"
+        string RagioneSociale   "varchar(150) |      | Ragione sociale"
+        string UtenteCreazione  "varchar(100) |      | Utente creazione"
+        datetime DataCreazione  "datetime2(3) |      | Data creazione"
+        string UtenteModifica   "varchar(100) |      | Utente modifica"
+        datetime DataModifica   "datetime2(3) |      | Data modifica"
     }
 
     Indirizzi {
-        int Id PK "Identificativo univoco"
-        int IdContraente FK "Riferimento contraente"
-        string Presso "varchar(150) | Presso"
-        string Toponimo "varchar(15) | Toponimo"
-        string DenominazioneStradale "varchar(100) | Denominazione stradale"
-        string Civico "varchar(5) | Civico"
-        string Km "varchar(10) | Km"
-        string Esponente "varchar(10) | Esponente"
-        string Edificio "varchar(10) | Edificio"
-        string Scala "varchar(5) | Scala"
-        string Piano "varchar(5) | Piano"
-        string Interno "varchar(5) | Interno"
-        string Cap "varchar(12) | CAP"
-        string Comune "varchar(50) | Comune"
-        string Localita "varchar(50) | Localita"
-        string Provincia "varchar(2) | Provincia"
-        string Nazione "varchar(50) | Nazione"
-        string UtenteCreazione "varchar(100) | Utente creazione"
-        datetime DataCreazione "datetime2(3) | Data creazione"
-        string UtenteModifica "varchar(100) | Utente modifica"
-        datetime DataModifica "datetime2(3) | Data modifica"
+        int Id PK                    "int          |      | Identificativo univoco"
+        int IdContraente FK          "int          |      | Riferimento contraente"
+        string Presso                "varchar(150) | Null | Presso"
+        string Toponimo              "varchar(15)  | Null | Toponimo"
+        string DenominazioneStradale "varchar(100) | Null | Denominazione stradale"
+        string Civico                "varchar(5)   | Null | Civico"
+        string Km                    "varchar(10)  | Null | Km"
+        string Esponente             "varchar(10)  | Null | Esponente"
+        string Edificio              "varchar(10)  | Null | Edificio"
+        string Scala                 "varchar(5)   | Null | Scala"
+        string Piano                 "varchar(5)   | Null | Piano"
+        string Interno               "varchar(5)   | Null | Interno"
+        string Cap                   "varchar(12)  | Null | CAP"
+        string Comune                "varchar(50)  | Null | Comune"
+        string Localita              "varchar(50)  | Null | Localita"
+        string Provincia             "varchar(2)   | Null | Provincia"
+        string Nazione               "varchar(50)  | Null | Nazione"
+        string UtenteCreazione       "varchar(100) |      | Utente creazione"
+        datetime DataCreazione       "datetime2(3) |      | Data creazione"
+        string UtenteModifica        "varchar(100) |      | Utente modifica"
+        datetime DataModifica        "datetime2(3) |      | Data modifica"
     }
 
     Contatti {
-        int Id PK "int | Identificativo univoco"
-        int IdTipo FK "tinynt | Tipo contatto"
-        int IdContraente FK "int | Riferimento contraente"
-        string Contatto "varchar(254) | Contatto"
-        string UtenteCreazione "varchar(100) | Utente creazione"
-        datetime DataCreazione "datetime2(3) | Data creazione"
-        string UtenteModifica "varchar(100) | Utente modifica"
-        datetime DataModifica "datetime2(3) | Data modifica"
+        int Id PK              "int          |      | Identificativo univoco"
+        int IdTipo FK          "tinynt       |      | Tipo contatto"
+        int IdContraente FK    "int          |      | Riferimento contraente"
+        string Contatto        "varchar(254) |      | Contatto"
+        string UtenteCreazione "varchar(100) |      | Utente creazione"
+        datetime DataCreazione "datetime2(3) |      | Data creazione"
+        string UtenteModifica  "varchar(100) |      | Utente modifica"
+        datetime DataModifica  "datetime2(3) |      | Data modifica"
     }
 
     TipiContatto {
-        int Id PK "tinynt | Identificativo univoco"
-        string Tipo "varchar(15) | Tipo contatto"
+        int Id PK   "tinynt      |      | Identificativo univoco"
+        string Tipo "varchar(15) |      | Tipo contatto"
     }
     
     Contratti {
-        int Id PK "Identificativo univoco"
-        int IdCategoria FK "Riferimento alla categoria del contratto"
-        int IdContraente FK "Riferimento al contraente (cliente)"
-        int IdContrattoRiferito FK "Riferimento al contratto principale (per accordi quadro) e RTI mandante"
-        string Descrizione "Descrizione contratto"
-        date DataInizio "Data inizio"
-        date DataFine "Data fine"
-        string UtenteCreazione "varchar(100) | Utente creazione"
-        datetime DataCreazione "datetime2(3) | Data creazione"
-        string UtenteModifica "varchar(100) | Utente modifica"
-        datetime DataModifica "datetime2(3) | Data modifica"
+        int Id PK                  "int          |      | Identificativo univoco"
+        int IdCategoria FK         "tinyint      |      | Riferimento alla categoria del contratto"
+        int IdContraente FK        "int          |      | Riferimento al contraente (cliente)"
+        int IdContrattoRiferito FK "int          |      | Riferimento al contratto principale"
+        string Descrizione         "varchar(200) |      | Descrizione contratto"
+        date DataInizio            "date         | Null | Data inizio"
+        date DataFine              "date         | Null | Data fine"
+        string UtenteCreazione     "varchar(100) |      | Utente creazione"
+        datetime DataCreazione     "datetime2(3) |      | Data creazione"
+        string UtenteModifica      "varchar(100) |      | Utente modifica"
+        datetime DataModifica      "datetime2(3) |      | Data modifica"
     }
 
     TipiCategoriaContratto {
-        int Id PK "Identificativo univoco"
-        string Tipo "Descrizione categoria contratto" 
+        int Id PK                  "tinyint     |      | Identificativo univoco"
+        string Tipo                "varchar(75) |      | Descrizione categoria contratto"
     }
 
     Commesse {
-        int Id PK "Identificativo univoco"
-        string Codice UK "Codice commessa"
-        string Descrizione "Descrizione" 
-        int IdContratto FK "Riferimento al contratto"
-        int IdContraente FK "Riferimento ente beneficiario"
-        int IdTipoNaturaContratto FK "Tipo contratto"
-        int IdTipoServizio FK "Tipo servizio"
-        int IdTipoEntrata FK "Tipo entrata"
-        int IdTipoStatoCommessa FK "Stato commessa"
-        date DataInizio "Data inizio"
-        date DataFine "Data fine"
-        string UtenteCreazione "varchar(100) | Utente creazione"
-        datetime DataCreazione "datetime2(3) | Data creazione"
-        string UtenteModifica "varchar(100) | Utente modifica"
-        datetime DataModifica "datetime2(3) | Data modifica"
+        int Id PK                    "int          |      | Identificativo univoco"
+        string Codice UK             "varchar(20)  |      | Codice commessa"
+        string Descrizione           "varchar(200) |      | Descrizione"
+        int IdContratto FK           "int          |      | Riferimento al contratto"
+        int IdContraente FK          "int          |      | Riferimento ente beneficiario"
+        int IdTipoNaturaContratto FK "tinyint      |      | Tipo contratto"
+        int IdTipoServizio FK        "tinyint      |      | Tipo servizio"
+        int IdTipoEntrata FK         "tinyint      |      | Tipo entrata"
+        int IdTipoStatoCommessa FK   "tinyint      |      | Stato commessa"
+        date DataInizio              "date         |      | Data inizio"
+        date DataFine                "date         |      | Data fine"
+        string UtenteCreazione       "varchar(100) |      | Utente creazione"
+        datetime DataCreazione       "datetime2(3) |      | Data creazione"
+        string UtenteModifica        "varchar(100) |      | Utente modifica"
+        datetime DataModifica        "datetime2(3) |      | Data modifica"
     }
 
     CondizioniEconomiche {
-        int Id PK "Identificativo univoco"
-        int IdCommessa FK "Riferimento alla commessa"
-        int IdTipoAttivita FK "Riferimento al tipo attivita"
-        string UtenteCreazione "varchar(100) | Utente creazione"
-        datetime DataCreazione "datetime2(3) | Data creazione"
-        string UtenteModifica "varchar(100) | Utente modifica"
-        datetime DataModifica "datetime2(3) | Data modifica"
+        int Id PK              "int          |      | Identificativo univoco"
+        int IdCommessa FK      "int          |      | Riferimento alla commessa"
+        int IdTipoAttivita FK  "tinyint      |      | Riferimento al tipo attivita"
+        string UtenteCreazione "varchar(100) |      | Utente creazione"
+        datetime DataCreazione "datetime2(3) |      | Data creazione"
+        string UtenteModifica  "varchar(100) |      | Utente modifica"
+        datetime DataModifica  "datetime2(3) |      | Data modifica"
     }
 
     ParametriEconomici {
-        int Id PK "Identificativo univoco"
-        int IdCondizioniEconomiche FK "Condizioni economiche"
-        short AnnoImposta "Anno di imposta" 
-        int IdTipoParametro FK "Tipo parametro"
-        decimal Valore "Valore parametro"
-        int IdTipoValore FK "Tipo valore"
-        string UtenteCreazione "varchar(100) | Utente creazione"
-        datetime DataCreazione "datetime2(3) | Data creazione"
-        string UtenteModifica "varchar(100) | Utente modifica"
-        datetime DataModifica "datetime2(3) | Data modifica"
+        int Id PK                     "int           |      | Identificativo univoco"
+        int IdCondizioniEconomiche FK "int           |      | Condizioni economiche"
+        short AnnoImposta             "smallint      |      | Anno di imposta"
+        int IdTipoParametro FK        "tinyint       |      | Tipo parametro"
+        int IdTipoValore FK           "tinyint       |      | Tipo valore"
+        decimal Valore                "decimal(13,8) |      | Valore parametro"
+        string UtenteCreazione        "varchar(100)  |      | Utente creazione"
+        datetime DataCreazione        "datetime2(3)  |      | Data creazione"
+        string UtenteModifica         "varchar(100)  |      | Utente modifica"
+        datetime DataModifica         "datetime2(3)  |      | Data modifica"
     }
 
     TipiParametro {
-        int Id PK "tinyint | Identificativo univoco"
-        string Tipo "Descrizione parametro"
+        int Id PK   "tinyint     |      | Identificativo univoco"
+        string Tipo "varchar(50) |      | Descrizione parametro"
     }
 
     TipiValore {
-        int Id PK "tinyint | Identificativo univoco"
-        string Tipo "Descrizione tipo valore"
+        int Id PK   "tinyint     |      | Identificativo univoco"
+        string Tipo "varchar(20) |      | Descrizione tipo valore"
     }
 
     TipiAttivita {
-        int Id PK "tinyint | Identificativo univoco"
-        string Codice "varchar(5) | Codice attività"
-        string Tipo "varchar(100) | Descrizione attività"
-        String CodiceCoge "varchar(5) | Codice COGE"
+        int Id PK         "tinyint      |      | Identificativo univoco"
+        string Codice     "varchar(5)   |      | Codice attività"
+        string Tipo       "varchar(100) |      | Descrizione attività"
+        String CodiceCoge "varchar(5)   |      | Codice COGE"
     }
 
     TipiNaturaContratto {
-        int Id PK "Identificativo univoco"
-        string Tipo "Descrizione natura contratto"
+        int Id PK   "tinyint     |      | Identificativo univoco"
+        string Tipo "varchar(15) |      | Descrizione natura contratto"
     }
 
     TipiServizio {
-        int Id PK "Identificativo univoco"
-        string Tipo "Descrizione servizio"
+        int Id PK   "tinyint     |      | Identificativo univoco"
+        string Tipo "varchar(15) |      | Descrizione servizio"
     }
 
     TipiEntrata {
-        int Id PK "tinyint | Identificativo univoco"
-        string CodiceInterno "varchar(10) | Codice tipologia entrata interno"
-        string Tipo "varchar(25) | Tipo entrata"
-        string DescrizioneInterna "varchar(150) | Descrizione estesa tipologia entrata"
-        int IdTipoNaturaEntrata FK "tinyint | Natura entrata"
-        int IdTipoMacroEntrata FK "tinyint | Macro entrata"
+        int Id PK                  "tinyint      |      | Identificativo univoco"
+        string CodiceInterno       "varchar(10)  |      | Codice tipologia entrata interno"
+        string Tipo                "varchar(25)  |      | Tipo entrata"
+        string DescrizioneInterna  "varchar(150) |      | Descrizione estesa tipologia entrata"
+        int IdTipoNaturaEntrata FK "tinyint      |      | Natura entrata"
+        int IdTipoMacroEntrata FK  "tinyint      |      | Macro entrata"
     }
 
     TipiNaturaEntrata {
-        int Id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(20) | Tipo natura entrata"
+        int Id PK   "tinyint     |      | Identificativo univoco"
+        string Tipo "varchar(20) |      | Tipo natura entrata"
     }
 
     TipiMacroEntrata {
-        int Id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(40) | Tipo macro entrata (per raggruppamenti BI)"
+        int Id PK   "tinyint     |      | Identificativo univoco"
+        string Tipo "varchar(40) |      | Tipo macro entrata (per raggruppamenti BI)"
     }
 
     TipiStatoCommessa {
-        int Id PK "tinyint | Identificativo univoco"
-        string Tipo "varchar(30) | Stato commessa"
+        int Id PK   "tinyint     |      | Identificativo univoco"
+        string Tipo "varchar(30) |      | Stato commessa"
     }
-
 ```
 
 ### TipiCategoriaContratto

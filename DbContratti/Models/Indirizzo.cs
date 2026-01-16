@@ -49,7 +49,7 @@ namespace DbContratti.Models
     [MaxLength(5)]
     public string INDIR_Interno { get; set; } = null!;
 
-    [RegularExpression(@"^[0-9]{5}$", ErrorMessage = "CAP non valido")]
+    [PostalCode("INDIR_Nazione")]
     [Column("INDIR_Cap", TypeName = "varchar(5)")]
     [MaxLength(5)]
     public string INDIR_Cap { get; set; } = null!;
