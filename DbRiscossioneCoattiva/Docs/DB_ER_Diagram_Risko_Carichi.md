@@ -339,25 +339,25 @@ erDiagram
 6. Annullato dall'Ente
 
 ## Note sulle entità
-CarichiDettaglio - IdTipoProvenienza - Tipo provenienza carico, può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
-CarichiDettaglio - IdTipoDocumentoRiferito - Opzionale: tipo documento antecedente il documento da riscuotere che stiamo passando al coattivo
-CarichiDettaglio - NumeroDocumentoRiferito - Opzionale: numero documento antecedente il documento da riscuotere che stiamo passando al coattivo
-CarichiDettaglio - DataDocumentoRiferito - Opzionale: data documento antecedente il documento da riscuotere che stiamo passando al coattivo
-CarichiDettaglio - DataNotifica - Data notifica del documento da riscuotere 
-CarichiDettaglio - DataScadenza - Data scadenza del documento da riscuotere: se non presente è uguale alla data di notifica + x giorni (da configurare)
-CarichiDettaglio - DataInizioInteressi - Data da cui inizia il calcolo degli interessi: viene calcolata a partire dalla data di scadenza + 1 giorno, oppure viene passata direttaente
-CarichiDettaglio - DataPrescrizione - Se non presente viene calcolata secondo le indicazioni dell'ufficio (es.°: data documento + x anni)
-CarichiDettaglio - SollecitoOriginale - Numero del sollecito originale da cui è stato generato questo carico dettaglio (se presente): serve solo per tenere traccia dell'origine del carico e verrà usato nella migrazione da Risko, da non tenerne conto nelle maschere
-Note - TipoNotaReport - Serve per classificare le note in base alla posizione in cui devono essere visualizzate nei report di stampa (usare per memorizzare il nome del campo Risko in cui era memorizzata la nota - es.° DescCarico1, DescCarico2, KeyRuolo, ecc.)
-SoggettiCarichiDettaglio - QuotaCarico - Percentuale di possesso del carico da parte del soggetto erede: valore di default 100
-TipiDocumento - CodiceAT - Codice interno Andreani: SERVE SOLO PER LA MIGRAZIONE, POI VERRA' ELIMINATO!
-TipiEntrata - CodiceInterno - VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE in Risko)
-TipiNormative - DataFine - Se null significa che è quella attualmente in vigore
-TipiRelazioniSoggettiCarichiDettaglio - Relazioni prese dal tracciato 600
-TipiStato - Legenda Risko: ATT = Attivo, CHS = Chiuso, DEC = Soggetto deceduto, DEL = Cancellato, SOS = Sospeso
+- CarichiDettaglio - IdTipoProvenienza - Tipo provenienza carico, può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
+- CarichiDettaglio - IdTipoDocumentoRiferito - Opzionale: tipo documento antecedente il documento da riscuotere che stiamo passando al coattivo
+- CarichiDettaglio - NumeroDocumentoRiferito - Opzionale: numero documento antecedente il documento da riscuotere che stiamo passando al coattivo
+- CarichiDettaglio - DataDocumentoRiferito - Opzionale: data documento antecedente il documento da riscuotere che stiamo passando al coattivo
+- CarichiDettaglio - DataNotifica - Data notifica del documento da riscuotere 
+- CarichiDettaglio - DataScadenza - Data scadenza del documento da riscuotere: se non presente è uguale alla data di notifica + x giorni (da configurare)
+- CarichiDettaglio - DataInizioInteressi - Data da cui inizia il calcolo degli interessi: viene calcolata a partire dalla data di scadenza + 1 giorno, oppure viene passata direttaente
+- CarichiDettaglio - DataPrescrizione - Se non presente viene calcolata secondo le indicazioni dell'ufficio (es.°: data documento + x anni)
+- CarichiDettaglio - SollecitoOriginale - Numero del sollecito originale da cui è stato generato questo carico dettaglio (se presente): serve solo per tenere traccia dell'origine del carico e verrà usato nella migrazione da Risko, da non tenerne conto nelle maschere
+- Note - TipoNotaReport - Serve per classificare le note in base alla posizione in cui devono essere visualizzate nei report di stampa (usare per memorizzare il nome del campo Risko in cui era memorizzata la nota - es.° DescCarico1, DescCarico2, KeyRuolo, ecc.)
+- SoggettiCarichiDettaglio - QuotaCarico - Percentuale di possesso del carico da parte del soggetto erede: valore di default 100
+- TipiDocumento - CodiceAT - Codice interno Andreani: SERVE SOLO PER LA MIGRAZIONE, POI VERRA' ELIMINATO!
+- TipiEntrata - CodiceInterno - VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE in Risko)
+- TipiNormative - DataFine - Se null significa che è quella attualmente in vigore
+- TipiRelazioniSoggettiCarichiDettaglio - Relazioni prese dal tracciato 600
+- TipiStato - Legenda Risko: ATT = Attivo, CHS = Chiuso, DEC = Soggetto deceduto, DEL = Cancellato, SOS = Sospeso
 
 # Approccio alla migrazione
-TotInteressiAtti, TotSanzioniAtti, TotInteressiRateizzo sono campi calcolati che attualmente stanno in CarichiDettaglio, ma andrebbero spostati in CarichiDettaglioVoci: andranno quindi opportunamente codificati prendendoli da rs_AttiDettaglio
-Annotazioni StatoAnnotazioni e campi DescCaricoX andranno mappati nelle note collegate al carico dettaglio
-bool HasRecuperoSpeseCarico Bit %%In Risko non viene quasi mai usato (dal 2015 solo 1 volta): serve per riuscire a recuperare le spese sostenute da Andreani per la notifica
+- TotInteressiAtti, TotSanzioniAtti, TotInteressiRateizzo sono campi calcolati che attualmente stanno in CarichiDettaglio, ma andrebbero spostati in CarichiDettaglioVoci: andranno quindi opportunamente codificati prendendoli da rs_AttiDettaglio
+- Annotazioni StatoAnnotazioni e campi DescCaricoX andranno mappati nelle note collegate al carico dettaglio
+- bool HasRecuperoSpeseCarico Bit %%In Risko non viene quasi mai usato (dal 2015 solo 1 volta): serve per riuscire a recuperare le spese sostenute da Andreani per la notifica
 

@@ -1,7 +1,7 @@
 ﻿# Definizione degli attributi di validazione dei campi
 
 ## Oggetto Contatto
-Le eMail e le PEC devono rispettare il formato standard di un indirizzo eMail.
+- Le eMail e le PEC devono rispettare il formato standard di un indirizzo eMail.
 
 ### Campo Valore
 ```csharp
@@ -23,8 +23,8 @@ Le eMail e le PEC devono rispettare il formato standard di un indirizzo eMail.
 ```
 
 ## Oggetti Contraente/Soggetto
-Il Codice Fiscale deve rispettare il formato standard di un codice fiscale italiano.
-La Partita IVA deve rispettare il formato standard di una partita IVA italiana.
+- Il Codice Fiscale deve rispettare il formato standard di un codice fiscale italiano.
+- La Partita IVA deve rispettare il formato standard di una partita IVA italiana.
 
 ### Campo CodiceFiscale (CodiceFiscaleAttribute.cs)
 ```csharp

@@ -349,8 +349,8 @@ erDiagram
 | 13  | SPESE  | Spese                                             | SPESE      |
 
 ### Note sulle entità
-Contratti - IdContrattoRiferito --> il cliente a cui fatturiamo è quello riferito qui, altrimenti è lo stesso del contratto
-TipiEntrata - VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE in Risko
+- Contratti - IdContrattoRiferito --> il cliente a cui fatturiamo è quello riferito qui, altrimenti è lo stesso del contratto
+- TipiEntrata - VEDI Gruppo = 'TIPO.TRIBUTO' su TABELLE in Risko
 
 ## Esempi di contratti
 
