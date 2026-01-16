@@ -331,12 +331,12 @@ erDiagram
 | 25 | VERT     | Vertenza                                 |
 
 ### TipiStato
-1 = Attivo
-2 = Chiuso
-3 = Soggetto deceduto
-4 = Cancellato
-5 = Sospeso
-6 = Annullato dall'Ente
+1. Attivo
+2. Chiuso
+3. Soggetto deceduto
+4. Cancellato
+5. Sospeso
+6. Annullato dall'Ente
 
 ## Note sulle entità
 CarichiDettaglio - IdTipoProvenienza - Tipo provenienza carico, può capitare che un carico da tracciato possa essere integrato manualmente, quindi a parità di carico possono esserci più dettagli con provenienze diverse
