@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/Elementi di soluzione/">
-    <File Path="Attributes.md" />
-    <File Path="Docs/Regole_nomenclatura_database.md" />
+    <File Path="Docs/ADR-013-database-naming-conventions.md" />
+    <File Path="Docs/Attributes.md" />
   </Folder>
   <Project Path="DbContratti/DbContratti.csproj" />
   <Project Path="DbRiscossioneCoattiva/DbRiscossioneCoattiva.csproj" />
